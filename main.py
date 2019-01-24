@@ -6,6 +6,7 @@ from gamelogic import handle_action
 
 MOVE_GHOST_EVENT = pygame.USEREVENT+1
 
+
 class Game:
     def __init__(self, level):
         pygame.init()
@@ -29,7 +30,6 @@ class Game:
             if event.type == pygame.QUIT:
                 self.done = True
             if event.type == MOVE_GHOST_EVENT:
-                print("move ghosts")
                 self.move_ghosts()
             move = map_key_to_action(event)
             handle_action(self.gamestate, move)

@@ -27,6 +27,7 @@ def read_level(level):
     gamestate = GameState()
     with open("./boards/" + level + '.txt', "r") as f:
         f = f.read().splitlines()
+        gamestate.dimensions = [len(f), len(f[0])]
         for y in f:
             for item in y:
                 current_position = x_pointer, y_pointer

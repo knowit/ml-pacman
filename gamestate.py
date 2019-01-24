@@ -5,15 +5,37 @@ class GameState:
         self.walls = []
         self.fruits = []
         self.ghosts = []
+        self.dimensions = []
+
+    def __str__(self):
+        board = self.get_text_representation_of_gamestate()
+        collapsed = [''.join(row) for row in board]
+
+        return '\n'.join(collapsed)
 
     def get_active_fruits(self):
         return [fruit for fruit in self.fruits if not fruit.is_eaten]
 
+    # The order matters. It determines the drawing order
     def retrieve_all_active_items(self):
-        # The order matters. It determines the drawing order
         items = []
         items.extend(self.walls)
         items.extend(self.get_active_fruits())
         items.extend(self.ghosts)
         items.append(self.pacman)
         return items
+
+    def insert_object_symbol_into_textual_gamestate(self, item, board):
+        board[item.position[1]][item.position[0]] = item.symbol
+
+    def get_text_representation_of_gamestate(self):
+        board = [['-' for i in range(self.dimensions[1])] for j in range(self.dimensions[0])]
+        active_items = self.retrieve_all_active_items()
+        for item in active_items:
+            self.insert_object_symbol_into_textual_gamestate(item, board)
+        return board
+
+
+
+
+
