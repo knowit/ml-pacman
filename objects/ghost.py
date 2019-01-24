@@ -3,7 +3,7 @@ from objects.existence import Existence
 
 class Ghost(Existence):
     def __init__(self, position, gamestate):
-        super().__init__(position, 'babyface.png', gamestate, 'G')
+        super().__init__(position, gamestate, icon='babyface.png', symbol='G', score=100)
 
     def get_direction(self):
         pacman_position = self.gamestate.pacman.position

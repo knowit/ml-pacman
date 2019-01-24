@@ -33,6 +33,7 @@ class Game:
                 self.move_ghosts()
             move = map_key_to_action(event)
             handle_action(self.gamestate, move)
+            print(self.gamestate.calculate_score())
 
         # Wipe screen from previous cycle
         self.screen.fill((255, 255, 255))

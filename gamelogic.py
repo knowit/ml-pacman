@@ -13,6 +13,10 @@ def handle_action(gamestate, move):
     if is_banana(gamestate, attempted_new_position):
         eat_banana(gamestate, attempted_new_position)
 
+    # Check if the action eats a dot
+    if is_dot(gamestate, attempted_new_position):
+        eat_dot(gamestate, attempted_new_position)
+
     # Finally if we get this far pacman is allowed to move
     gamestate.pacman.move(move)
 
@@ -27,6 +31,7 @@ def add_move_to_position(old_position, move):
     return old_position[0] + move[0], old_position[1] + move[1]
 
 
+# TODO: This can be generalized
 def is_banana(gamestate, position):
     for fruit in gamestate.get_active_fruits():
         if fruit.position == position:
@@ -38,6 +43,24 @@ def eat_banana(gamestate, position):
     for fruit in gamestate.fruits:
         if fruit.position == position:
             fruit.eat()
+
+
+def is_dot(gamestate, position):
+    for dot in gamestate.get_active_dots():
+        if dot.position == position:
+            return True
+    return False
+
+
+def eat_dot(gamestate, position):
+    for dot in gamestate.dots:
+        if dot.position == position:
+            dot.eat()
+
+
+# Returns how the gamestate would look if current move is executed
+def get_next_gamestate(gamestate, move):
+    pass
 
 
 def is_wall(gamestate, position):

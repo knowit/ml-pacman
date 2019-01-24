@@ -5,6 +5,7 @@ class GameState:
         self.walls = []
         self.fruits = []
         self.ghosts = []
+        self.dots = []
         self.dimensions = []
 
     def __str__(self):
@@ -16,11 +17,23 @@ class GameState:
     def get_active_fruits(self):
         return [fruit for fruit in self.fruits if not fruit.is_eaten]
 
+    def get_active_dots(self):
+        return [dot for dot in self.dots if not dot.is_eaten]
+
+    def calculate_score(self):
+        score = 0
+        for fruit in self.fruits:
+            score += fruit.score if fruit.is_eaten else 0
+        for dot in self.dots:
+            score += dot.score if dot.is_eaten else 0
+        return score
+
     # The order matters. It determines the drawing order
     def retrieve_all_active_items(self):
         items = []
         items.extend(self.walls)
         items.extend(self.get_active_fruits())
+        items.extend(self.get_active_dots())
         items.extend(self.ghosts)
         items.append(self.pacman)
         return items

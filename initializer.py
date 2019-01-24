@@ -2,6 +2,7 @@ from objects.pacman import Pacman
 from objects.fruit import Fruit
 from objects.wall import Wall
 from objects.ghost import Ghost
+from objects.dot import Dot
 from gamestate import GameState
 
 
@@ -14,6 +15,8 @@ def translate_input_symbol_to_object(position, gamestate, symbol):
         gamestate.walls.append(Wall(position, gamestate))
     if symbol == "G":
         gamestate.ghosts.append(Ghost(position, gamestate))
+    if symbol == "-":
+        gamestate.dots.append(Dot(position, gamestate))
 
 
 def initialize_game_from_file(file):
