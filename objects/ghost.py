@@ -3,7 +3,7 @@ from objects.existence import Existence
 
 class Ghost(Existence):
     def __init__(self, position, gamestate):
-        super().__init__(position, 'babyface.png', gamestate)
+        super().__init__(position, 'babyface.png', gamestate, 'G')
 
     def get_direction(self):
         pacman_position = self.gamestate.pacman.position
@@ -20,5 +20,4 @@ class Ghost(Existence):
 
     def chase_pacman(self):
         direction = self.get_direction()
-        print(direction)
         self.position = self.position[0] + direction[0], self.position[1] + direction[1]
