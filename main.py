@@ -40,6 +40,8 @@ class Game:
 
         # Draw current gamestate to the screen
         b.draw_board(self.gamestate, self.screen)
+        b.draw_lives(self.gamestate, self.screen)
+        b.draw_score(self.gamestate, self.screen)
 
         # Limit FPS to 60 (still unnecessarily high)
         self.clock.tick(60)
