@@ -20,6 +20,7 @@ class GameState:
     def get_active_dots(self):
         return [dot for dot in self.dots if not dot.is_eaten]
 
+
     def calculate_score(self):
         score = 0
         for fruit in self.fruits:

@@ -17,6 +17,8 @@ def handle_action(gamestate, move):
     if is_dot(gamestate, attempted_new_position):
         eat_dot(gamestate, attempted_new_position)
 
+    is_eaten_by_ghost(gamestate, attempted_new_position)
+
     # Finally if we get this far pacman is allowed to move
     gamestate.pacman.move(move)
 
@@ -29,6 +31,20 @@ def check_move_validity(gamestate, move):
 
 def add_move_to_position(old_position, move):
     return old_position[0] + move[0], old_position[1] + move[1]
+
+
+def is_eaten_by_ghost(gamestate, position):
+    for ghost in gamestate.ghosts:
+        if ghost.position == position:
+            reset(gamestate)
+            break
+
+
+def reset(gamestate):
+    for ghost in gamestate.ghosts:
+        ghost.respawn()
+    gamestate.pacman.lose_life(1)
+    gamestate.pacman.respawn()
 
 
 # TODO: This can be generalized

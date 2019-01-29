@@ -4,6 +4,10 @@ from objects.existence import Existence
 class Ghost(Existence):
     def __init__(self, position, gamestate):
         super().__init__(position, gamestate, icon='babyface.png', symbol='G', score=100)
+        self.respawn_position = position
+
+    def respawn(self):
+        self.position = self.respawn_position
 
     def get_direction(self):
         pacman_position = self.gamestate.pacman.position
@@ -16,7 +20,6 @@ class Ghost(Existence):
         if abs(direction[1]) >= abs(direction[0]):
             a = 1 if direction[1] > 0 else -1
             return [0, a]
-
 
     def chase_pacman(self):
         direction = self.get_direction()
