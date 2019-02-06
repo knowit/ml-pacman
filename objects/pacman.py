@@ -1,6 +1,7 @@
 from objects.existence import Existence
 import utils.moves as moves
 from objects.fruit import Fruit
+import time
 
 
 class Pacman(Existence):
@@ -9,6 +10,7 @@ class Pacman(Existence):
         self.lives = 3
         self.respawn_position = position
         self.current_move = "NONE"
+        self.time_at_last_tick = time.time()
 
     def lose_life(self, lives_lost):
         self.lives -= lives_lost
@@ -38,3 +40,4 @@ class Pacman(Existence):
         direction = moves.DIRECTION_FROM_MOVE[self.current_move]
         super().move(direction)
         self.handle_action()
+        self.time_at_last_tick = time.time()

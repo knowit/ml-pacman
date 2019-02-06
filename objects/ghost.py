@@ -103,7 +103,6 @@ class Ghost(Existence):
         self.execute_move(direction)
 
     def scatter(self):
-        print(self.target_position)
         direction = self.get_direction()
         self.execute_move(direction)
 
