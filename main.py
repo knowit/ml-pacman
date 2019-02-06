@@ -1,10 +1,11 @@
 import pygame
 import graphics.draw_board as b
 from initializer import initialize_game_from_file
-from keymapper import map_key_to_action
-from gamelogic import handle_action
+from keymapper import map_key_to_move
+import gamelogic
 
 MOVE_GHOST_EVENT = pygame.USEREVENT+1
+PACMAN_TICK = pygame.USEREVENT+2
 
 
 class Game:
@@ -15,6 +16,7 @@ class Game:
         self.gamestate = initialize_game_from_file(level)
         self.done = False
         pygame.time.set_timer(MOVE_GHOST_EVENT, 1000)
+        pygame.time.set_timer(PACMAN_TICK, 800)
 
     def run(self):
         while not self.done:
@@ -31,9 +33,11 @@ class Game:
                 self.done = True
             if event.type == MOVE_GHOST_EVENT:
                 self.move_ghosts()
-            move = map_key_to_action(event)
-            handle_action(self.gamestate, move)
-            print(self.gamestate.calculate_score())
+            if event.type == PACMAN_TICK:
+                self.gamestate.pacman.tick()
+            move = map_key_to_move(event)
+            self.gamestate.pacman.set_move(move)
+            gamelogic.is_eaten_by_ghost(self.gamestate, self.gamestate.pacman.position)
 
         # Wipe screen from previous cycle
         self.screen.fill((255, 255, 255))

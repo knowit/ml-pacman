@@ -1,7 +1,7 @@
 
 
 OPPOSITE_MOVES = dict(UP="DOWN", LEFT="RIGHT", DOWN="UP", RIGHT="LEFT")
-DIRECTION_FROM_MOVE = dict(UP=(0,1), LEFT=(-1,0), DOWN=(0,-1), RIGHT=(1,0))
+DIRECTION_FROM_MOVE = dict(UP=(0,-1), LEFT=(-1,0), DOWN=(0,1), RIGHT=(1,0), NONE=(0,0))
 
 
 def calculate_euclidean_distance_to_target(current, target):

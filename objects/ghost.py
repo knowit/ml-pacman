@@ -41,6 +41,7 @@ class Ghost(Existence):
         self.mode = CHASE
         self.previous_move = None
         self.time_at_respawn = time.time()
+        self.frightened = False
 
     def ghost_event_routine(self):
         if time.time() - self.time_at_respawn > 84:
@@ -109,10 +110,13 @@ class Ghost(Existence):
     def run_away(self):
         pass
 
+    def frighten(self):
+        self.frightened = True
+
     def execute_move(self, next_move):
         self.previous_move = next_move
         direction = moves.DIRECTION_FROM_MOVE[next_move]
-        self.position = self.position[0] + direction[0], self.position[1] + direction[1]
+        super().move(direction)
 
     def set_mode(self, mode):
         if mode == self.mode:
