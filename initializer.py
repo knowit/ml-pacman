@@ -13,6 +13,7 @@ def translate_input_symbol_to_object(position, gamestate, symbol):
         gamestate.fruits.append(Fruit(position, gamestate))
     if symbol == "W":
         gamestate.walls.append(Wall(position, gamestate))
+        gamestate.wall_positions.append(position)
     if symbol == "G":
         gamestate.ghosts.append(Ghost(position, gamestate))
     if symbol == "-":

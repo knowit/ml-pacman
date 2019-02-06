@@ -7,6 +7,8 @@ class GameState:
         self.ghosts = []
         self.dots = []
         self.dimensions = []
+        # As walls are static, we do not need to look them up every time we need to know
+        self.wall_positions = []
 
     def __str__(self):
         board = self.get_text_representation_of_gamestate()
@@ -20,6 +22,12 @@ class GameState:
     def get_active_dots(self):
         return [dot for dot in self.dots if not dot.is_eaten]
 
+    def get_wall_positions(self):
+        return self.wall_positions
+
+    def get_corners(self):
+        w, h = self.dimensions
+        return [(0,0), (w, 0), (0, h), (h, w)]
 
     def calculate_score(self):
         score = 0
