@@ -22,7 +22,7 @@ class Game:
 
     def move_ghosts(self):
         for ghost in self.gamestate.ghosts:
-            ghost.chase_pacman()
+            ghost.do_move()
 
     def execute_game_loop(self):
         # Handle keyboard events for manual playing
