@@ -37,7 +37,7 @@ class Game:
                 self.gamestate.pacman.tick()
             move = map_key_to_move(event)
             self.gamestate.pacman.set_move(move)
-            gamelogic.is_eaten_by_ghost(self.gamestate, self.gamestate.pacman.position)
+            gamelogic.check_collisions(self.gamestate)
 
         # Wipe screen from previous cycle
         self.screen.fill((255, 255, 255))

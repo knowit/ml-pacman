@@ -16,6 +16,15 @@ def reset(gamestate):
     gamestate.pacman.respawn()
 
 
+def check_collisions(gamestate):
+    for ghost in gamestate.ghosts:
+        if ghost.position == gamestate.pacman.position:
+            if ghost.frightened:
+                ghost.respawn()
+            else:
+                reset(gamestate)
+
+
 # Returns how the gamestate would look if current move is executed
 def get_next_gamestate(gamestate, move):
     pass
