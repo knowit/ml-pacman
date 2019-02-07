@@ -3,34 +3,11 @@ import utils.moves as moves
 import random
 import time
 
-# Every ghost has a mode
-# Either Chase, Scatter, or Frightened. Default is Chase
-# Chase: target position is based on pacmans position
-# Scatter: target position is outside one of the four corners
-
-# The different modes are set based on a timer that is reset every time pacman loses a life
-
-# 1 Scatter for 7 seconds, then Chase for 20 seconds.
-# 2 Scatter for 7 seconds, then Chase for 20 seconds.
-# 3 Scatter for 5 seconds, then Chase for 20 seconds.
-# 4 Scatter for 5 seconds, then switch to Chase mode permanently.
-
-# 0 seconds -> scatter
-# 7 seconds -> chase
-# 27 seconds -> scatter
-# 34 seconds -> chase
-# 54 seconds -> scatter
-# 59 seconds -> chase
-# 79 seconds -> scatter
-# 84 seconds -> chase
-
-# ghosts can never go back to the tile they came from. Unless frightened!
-
-# Ghosts only ever plan 1 step in the future
+# Ghost logic mostly follows this: http://gameinternals.com/post/2072558330/understanding-pac-man-ghost-behavior
 
 CHASE = 'CHASE'
 SCATTER = 'SCATTER'
-FRIGHTENED = 'FRIGHTENED'
+FRIGHTENED_DURATION = 5
 
 
 class Ghost(Existence):
@@ -42,6 +19,7 @@ class Ghost(Existence):
         self.previous_move = None
         self.time_at_respawn = time.time()
         self.time_at_last_tick = time.time()
+        self.time_at_frightened_start = None
         self.frightened = False
 
     def ghost_event_routine(self):
@@ -93,8 +71,10 @@ class Ghost(Existence):
 
         min_distance = min(distance_per_move.values())
         best_moves = [move for move in distance_per_move if distance_per_move[move] == min_distance]
-        # Return the best move based on prio list
-        for move in best_moves:
+        return self.get_prioritized_moves(best_moves)
+
+    def get_prioritized_moves(self, possible_moves):
+        for move in possible_moves:
             if move == "UP":
                 return move
             if move == "LEFT":
@@ -113,10 +93,20 @@ class Ghost(Existence):
         self.execute_move(direction)
 
     def run_away(self):
-        pass
+        possible_moves = [move for move in self.get_available_moves().keys()]
+        random.shuffle(possible_moves)
+        move = possible_moves[0]
+        self.execute_move(move)
+        self.end_run_away_if_time_is_out()
+
+    def end_run_away_if_time_is_out(self):
+        if time.time() - self.time_at_frightened_start > FRIGHTENED_DURATION:
+            self.frightened = False
 
     def frighten(self):
+        self.time_at_frightened_start = time.time()
         self.frightened = True
+        self.previous_move = moves.OPPOSITE_MOVES[self.previous_move]
 
     def execute_move(self, next_move):
         self.previous_move = next_move
@@ -137,9 +127,9 @@ class Ghost(Existence):
     def tick(self):
         self.time_at_last_tick = time.time()
         self.set_mode(self.ghost_event_routine())
+        if self.frightened:
+            return self.run_away()
         if self.mode == CHASE:
             self.chase_pacman()
         elif self.mode == SCATTER:
             self.scatter()
-        elif self.mode == FRIGHTENED:
-            self.run_away()
