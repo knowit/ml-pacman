@@ -2,6 +2,7 @@ import utils.load_asset as load
 import pygame
 import time
 from objects.pacman import Pacman
+from objects.ghost import Ghost
 from utils.moves import DIRECTION_FROM_MOVE
 import gamelogic
 
@@ -16,6 +17,8 @@ def translate_position_to_pixels(position):
 def draw_item(item, screen):
     if type(item) == Pacman:
         draw_pacman(item, screen)
+    elif type(item) == Ghost:
+        draw_ghost(item, screen)
     else:
         screen.blit(load.get_image('./images/' + item.get_icon()),
                     translate_position_to_pixels(item.get_position()))
@@ -36,6 +39,19 @@ def draw_pacman(pacman, screen):
     pixel_position = translate_position_to_pixels(pacman.get_position())
     pixel_position_offset = pixel_position[0] + direction_offset[0], pixel_position[1] + direction_offset[1]
     screen.blit(load.get_image('./images/' + pacman.get_icon()),
+                pixel_position_offset)
+
+def draw_ghost(ghost, screen):
+    time_since_tick = time.time() - ghost.time_at_last_tick
+    direction_offset = [0, 0]
+    if ghost.previous_move:
+        offset = image_size - (image_size * (time_since_tick/1.0))
+        direction = ghost.position[0] - ghost.previous_position[0], ghost.position[1] - ghost.previous_position[1]
+        direction_offset = direction[0] * offset, direction[1] * offset
+
+    pixel_position = translate_position_to_pixels(ghost.get_position())
+    pixel_position_offset = pixel_position[0] - direction_offset[0], pixel_position[1] - direction_offset[1]
+    screen.blit(load.get_image('./images/' + ghost.get_icon()),
                 pixel_position_offset)
 
 

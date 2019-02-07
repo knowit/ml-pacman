@@ -1,8 +1,10 @@
 import gamelogic
 
+
 class Existence:
     def __init__(self, location, gamestate, icon, symbol, score=0):
         self.position = location
+        self.previous_position = None
         self.icon = icon
         self.gamestate = gamestate
         self.symbol = symbol
@@ -19,6 +21,7 @@ class Existence:
 
     def move(self, direction):
         if self.is_move_valid(direction):
+            self.previous_position = self.position
             self.position = self.position[0] + direction[0], self.position[1] + direction[1]
 
     def is_move_valid(self, direction):

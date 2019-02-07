@@ -9,14 +9,14 @@ from gamestate import GameState
 def translate_input_symbol_to_object(position, gamestate, symbol):
     if symbol == "P":
         gamestate.pacman = Pacman(position, gamestate)
-    if symbol == "F":
+    if symbol == "o":
         gamestate.fruits.append(Fruit(position, gamestate))
-    if symbol == "W":
+    if symbol == "%":
         gamestate.walls.append(Wall(position, gamestate))
         gamestate.wall_positions.append(position)
     if symbol == "G":
         gamestate.ghosts.append(Ghost(position, gamestate))
-    if symbol == "-":
+    if symbol == ".":
         gamestate.dots.append(Dot(position, gamestate))
 
 

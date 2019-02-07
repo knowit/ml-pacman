@@ -41,6 +41,7 @@ class Ghost(Existence):
         self.mode = CHASE
         self.previous_move = None
         self.time_at_respawn = time.time()
+        self.time_at_last_tick = time.time()
         self.frightened = False
 
     def ghost_event_routine(self):
@@ -76,6 +77,11 @@ class Ghost(Existence):
             if moves.OPPOSITE_MOVES[direction] == self.previous_move:
                 continue
             non_blocked_moves[direction] = new_position
+
+        # This means that we are stuck in a corner
+        if len(non_blocked_moves.values()) == 0:
+            opposite_direction = moves.OPPOSITE_MOVES[self.previous_move]
+            non_blocked_moves[opposite_direction] = all_possible_moves[opposite_direction]
 
         return non_blocked_moves
 
@@ -128,7 +134,8 @@ class Ghost(Existence):
         if mode == CHASE:
             self.target_position = self.gamestate.pacman.position
 
-    def do_move(self):
+    def tick(self):
+        self.time_at_last_tick = time.time()
         self.set_mode(self.ghost_event_routine())
         if self.mode == CHASE:
             self.chase_pacman()

@@ -24,7 +24,7 @@ class Game:
 
     def move_ghosts(self):
         for ghost in self.gamestate.ghosts:
-            ghost.do_move()
+            ghost.tick()
 
     def execute_game_loop(self):
         # Handle keyboard events for manual playing
@@ -53,7 +53,7 @@ class Game:
 
 
 if __name__ == '__main__':
-    game = Game('level-1')
+    game = Game('level-2')
     game.run()
 
 
