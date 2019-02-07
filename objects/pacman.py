@@ -41,3 +41,7 @@ class Pacman(Existence):
         super().move(direction)
         self.handle_action()
         self.time_at_last_tick = time.time()
+
+
+
+

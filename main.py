@@ -16,7 +16,7 @@ class Game:
         self.gamestate = initialize_game_from_file(level)
         self.done = False
         pygame.time.set_timer(MOVE_GHOST_EVENT, 1000)
-        pygame.time.set_timer(PACMAN_TICK, 200)
+        pygame.time.set_timer(PACMAN_TICK, 400)
 
     def run(self):
         while not self.done:

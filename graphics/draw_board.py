@@ -3,8 +3,6 @@ import pygame
 import time
 from objects.pacman import Pacman
 from objects.ghost import Ghost
-from utils.moves import DIRECTION_FROM_MOVE
-import gamelogic
 
 image_size = 40
 font_name = "comicsansms"
@@ -16,43 +14,25 @@ def translate_position_to_pixels(position):
 
 def draw_item(item, screen):
     if type(item) == Pacman:
-        draw_pacman(item, screen)
+        animate_item(item, screen, 0.1)
     elif type(item) == Ghost:
-        draw_ghost(item, screen)
+        animate_item(item, screen, 0.5)
     else:
         screen.blit(load.get_image('./images/' + item.get_icon()),
                     translate_position_to_pixels(item.get_position()))
 
 
-def draw_pacman(pacman, screen):
-    time_since_tick = time.time() - pacman.time_at_last_tick
+def animate_item(item, screen, animation_delta):
+    time_since_tick = time.time() - item.time_at_last_tick
     direction_offset = [0, 0]
-    if pacman.current_move is not "None":
-        offset = (image_size * (time_since_tick/0.2))
-        direction = DIRECTION_FROM_MOVE[pacman.current_move]
-
-        #check if position we are moving to is a wall
-        next_position = gamelogic.add_move_to_position(pacman.position, direction)
-        if not gamelogic.is_wall(pacman.gamestate, next_position):
-            direction_offset = direction[0] * offset, direction[1] * offset
-
-    pixel_position = translate_position_to_pixels(pacman.get_position())
-    pixel_position_offset = pixel_position[0] + direction_offset[0], pixel_position[1] + direction_offset[1]
-    screen.blit(load.get_image('./images/' + pacman.get_icon()),
-                pixel_position_offset)
-
-def draw_ghost(ghost, screen):
-    time_since_tick = time.time() - ghost.time_at_last_tick
-    direction_offset = [0, 0]
-    if ghost.previous_move:
-        offset = image_size - (image_size * (time_since_tick/1.0))
-        direction = ghost.position[0] - ghost.previous_position[0], ghost.position[1] - ghost.previous_position[1]
+    if item.previous_position != item.position:
+        offset = image_size - (image_size * (min(time_since_tick / animation_delta, 1)))
+        direction = item.position[0] - item.previous_position[0], item.position[1] - item.previous_position[1]
         direction_offset = direction[0] * offset, direction[1] * offset
 
-    pixel_position = translate_position_to_pixels(ghost.get_position())
+    pixel_position = translate_position_to_pixels(item.get_position())
     pixel_position_offset = pixel_position[0] - direction_offset[0], pixel_position[1] - direction_offset[1]
-    screen.blit(load.get_image('./images/' + ghost.get_icon()),
-                pixel_position_offset)
+    screen.blit(load.get_image('./images/' + item.get_icon()), pixel_position_offset)
 
 
 def draw_score(gamestate, screen):
