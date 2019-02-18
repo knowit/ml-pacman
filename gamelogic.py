@@ -34,12 +34,7 @@ def get_next_gamestate_from_move(gamestate, move):
     gamestate_copy.pacman.tick()
     for ghost in gamestate_copy.ghosts:
         ghost.tick()
-    return {
-        'GAMESTATE': gamestate_copy,
-        'SCORE': gamestate_copy.calculate_score(),
-        'LIVES': gamestate_copy.pacman.lives,
-        'HAS_WON': gamestate_copy.has_won()
-    }
+    return gamestate_copy
 
 
 def get_next_gamestate_DEBUG(gamestate):

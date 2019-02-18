@@ -9,12 +9,13 @@ PACMAN_TICK = pygame.USEREVENT+2
 
 
 class Game:
-    def __init__(self, level):
+    def __init__(self, level, ai_function=None):
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600))
         self.clock = pygame.time.Clock()
         self.gamestate = initialize_gamestate_from_file(level)
         self.done = False
+        self.ai_function = ai_function
         pygame.time.set_timer(MOVE_GHOST_EVENT, 400)
         pygame.time.set_timer(PACMAN_TICK, 400)
 
@@ -50,6 +51,10 @@ class Game:
                 self.move_ghosts()
             if event.type == PACMAN_TICK:
                 self.gamestate.pacman.tick()
+
+            if self.ai_function:
+                move = self.ai_function(self.gamestate)
+                self.gamestate.pacman.set_move(move)
 
             self.handle_input_action(event)
 
