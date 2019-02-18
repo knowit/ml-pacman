@@ -20,7 +20,7 @@ def translate_input_symbol_to_object(position, gamestate, symbol):
         gamestate.dots.append(Dot(position, gamestate))
 
 
-def initialize_game_from_file(file):
+def initialize_gamestate_from_file(file):
     gamestate = read_level(file)
     return gamestate
 
