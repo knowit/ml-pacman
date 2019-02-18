@@ -29,13 +29,22 @@ class GameState:
         w, h = self.dimensions
         return [(0,0), (w, 0), (0, h), (h, w)]
 
+    def has_won(self):
+        if len(self.get_active_dots()) > 0:
+            return False
+        if len(self.get_active_fruits()) > 0:
+            return False
+        if self.pacman.lives > 0:
+            return True
+        return False
+
     def calculate_score(self):
         score = 0
         for fruit in self.fruits:
             score += fruit.score if fruit.is_eaten else 0
         for dot in self.dots:
             score += dot.score if dot.is_eaten else 0
-        return score
+        return score - self.pacman.number_of_ticks
 
     # The order matters. It determines the drawing order
     def retrieve_all_active_items(self):

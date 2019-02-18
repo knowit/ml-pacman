@@ -8,9 +8,11 @@ class Pacman(Existence):
     def __init__(self, position, gamestate):
         super().__init__(position, gamestate, icon='manu.png', symbol='P')
         self.lives = 3
+        self.max_lives = 3
         self.respawn_position = position
         self.current_move = "NONE"
         self.time_at_last_tick = time.time()
+        self.number_of_ticks = 0
 
     def lose_life(self, lives_lost):
         self.lives -= lives_lost
@@ -41,6 +43,7 @@ class Pacman(Existence):
         super().move(direction)
         self.handle_action()
         self.time_at_last_tick = time.time()
+        self.number_of_ticks += 1
 
 
 

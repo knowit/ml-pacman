@@ -1,5 +1,4 @@
 import copy
-import utils.moves as moves
 
 
 def add_move_to_position(old_position, move):
@@ -35,7 +34,12 @@ def get_next_gamestate_from_move(gamestate, move):
     gamestate_copy.pacman.tick()
     for ghost in gamestate_copy.ghosts:
         ghost.tick()
-    return gamestate_copy
+    return {
+        'GAMESTATE': gamestate_copy,
+        'SCORE': gamestate_copy.calculate_score(),
+        'LIVES': gamestate_copy.pacman.lives,
+        'HAS_WON': gamestate_copy.has_won()
+    }
 
 
 def get_next_gamestate_DEBUG(gamestate):
@@ -45,13 +49,13 @@ def get_next_gamestate_DEBUG(gamestate):
     print('|')
     print('|')
     print('\\/')
-    for move in moves.DIRECTION_FROM_MOVE.keys():
-        print(get_next_gamestate_from_move(move))
+    for move in ["UP", "LEFT", "DOWN", "RIGHT"]:
+        print(get_next_gamestate_from_move(gamestate, move))
 
 
 # Returns how the gamestate would look if current move is executed
 def get_next_gamestate_by_move(gamestate):
-    return {move: get_next_gamestate_from_move(gamestate, move) for move in moves.DIRECTION_FROM_MOVE.keys()}
+    return {move: get_next_gamestate_from_move(gamestate, move) for move in ["UP", "LEFT", "DOWN", "RIGHT"]}
 
 
 def is_wall(gamestate, position):
