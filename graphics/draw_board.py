@@ -16,7 +16,7 @@ def draw_item(item, screen):
     if type(item) == Pacman:
         animate_item(item, screen, 0.1)
     elif type(item) == Ghost:
-        animate_item(item, screen, 0.5)
+        animate_item(item, screen, 0.1)
     else:
         screen.blit(load.get_image('./images/' + item.get_icon()),
                     translate_position_to_pixels(item.get_position()))

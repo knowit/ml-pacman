@@ -51,7 +51,7 @@ class GameState:
         board[item.position[1]][item.position[0]] = item.symbol
 
     def get_text_representation_of_gamestate(self):
-        board = [['-' for i in range(self.dimensions[1])] for j in range(self.dimensions[0])]
+        board = [[' ' for i in range(self.dimensions[1])] for j in range(self.dimensions[0])]
         active_items = self.retrieve_all_active_items()
         for item in active_items:
             self.insert_object_symbol_into_textual_gamestate(item, board)
