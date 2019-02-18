@@ -1,4 +1,5 @@
 from objects.existence import Existence
+from objects.animated import Animated
 import utils.moves as moves
 from objects.fruit import Fruit
 import time
@@ -6,7 +7,8 @@ import time
 
 class Pacman(Existence):
     def __init__(self, position, gamestate):
-        super().__init__(position, gamestate, icon='manu.png', symbol='P')
+        super().__init__(position, gamestate, icon='priest_1.png', symbol='P')
+        super().set_animation(Animated('priest', 4, 0.25))
         self.lives = 3
         self.max_lives = 3
         self.respawn_position = position

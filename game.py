@@ -29,7 +29,7 @@ class Game:
 
     def animate(self):
         # Wipe screen from previous cycle
-        self.screen.fill((255, 255, 255))
+        self.screen.fill((89, 54, 104))
 
         # Draw current gamestate to the screen
         b.draw_board(self.gamestate, self.screen)

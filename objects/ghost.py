@@ -1,4 +1,5 @@
 from objects.existence import Existence
+from objects.animated import Animated
 import utils.moves as moves
 import random
 import time
@@ -12,7 +13,9 @@ FRIGHTENED_DURATION = 5
 
 class Ghost(Existence):
     def __init__(self, position, gamestate):
-        super().__init__(position, gamestate, icon='babyface.png', symbol='G', score=100)
+        super().__init__(position, gamestate, icon='skull_1.png', symbol='G', score=100)
+        super().set_animation(Animated('skull', 4, 0.25))
+
         self.respawn_position = position
         self.target_position = (3, 3)
         self.mode = CHASE

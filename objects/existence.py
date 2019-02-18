@@ -9,11 +9,17 @@ class Existence:
         self.gamestate = gamestate
         self.symbol = symbol
         self.score = score
+        self.animation = None
+
+    def set_animation(self, animation):
+        self.animation = animation
 
     def get_position(self):
         return self.position
 
     def get_icon(self):
+        if self.animation:
+            return self.animation.get_icon()
         return self.icon
 
     def get_symbol(self):

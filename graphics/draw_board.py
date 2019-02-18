@@ -14,15 +14,15 @@ def translate_position_to_pixels(position):
 
 def draw_item(item, screen):
     if type(item) == Pacman:
-        animate_item(item, screen, 0.1)
+        animate_item(item, screen, 0.1, item.current_move == "LEFT")
     elif type(item) == Ghost:
-        animate_item(item, screen, 0.1)
+        animate_item(item, screen, 0.1, item.previous_move == "LEFT")
     else:
         screen.blit(load.get_image('./images/' + item.get_icon()),
                     translate_position_to_pixels(item.get_position()))
 
 
-def animate_item(item, screen, animation_delta):
+def animate_item(item, screen, animation_delta, flipped):
     time_since_tick = time.time() - item.time_at_last_tick
     direction_offset = [0, 0]
     if item.previous_position != item.position:
@@ -32,7 +32,12 @@ def animate_item(item, screen, animation_delta):
 
     pixel_position = translate_position_to_pixels(item.get_position())
     pixel_position_offset = pixel_position[0] - direction_offset[0], pixel_position[1] - direction_offset[1]
-    screen.blit(load.get_image('./images/' + item.get_icon()), pixel_position_offset)
+
+    image = load.get_image('./images/' + item.get_icon())
+    if flipped:
+            image = pygame.transform.flip(image, True, False)
+
+    screen.blit(image, pixel_position_offset)
 
 
 def draw_score(gamestate, screen):
