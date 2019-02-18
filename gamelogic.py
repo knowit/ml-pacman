@@ -27,6 +27,7 @@ def check_collisions(gamestate):
 
 # Returns how the gamestate would look if current move is executed
 def get_next_gamestate(gamestate, move):
+
     pass
 
 
