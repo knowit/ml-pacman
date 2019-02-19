@@ -33,9 +33,13 @@ def animate_item(item, screen, animation_delta, flipped):
     pixel_position = translate_position_to_pixels(item.get_position())
     pixel_position_offset = pixel_position[0] - direction_offset[0], pixel_position[1] - direction_offset[1]
 
-    image = load.get_image('./images/' + item.get_icon())
+    image = load.get_image('./images/' + item.get_icon(), force_reload=type(item) == Ghost)
     if flipped:
             image = pygame.transform.flip(image, True, False)
+
+    if type(item) == Ghost:
+        if item.frightened:
+            image.fill((0, 70, 0, 40), special_flags=pygame.BLEND_ADD)
 
     screen.blit(image, pixel_position_offset)
 
