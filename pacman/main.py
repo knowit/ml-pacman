@@ -1,4 +1,4 @@
-from game import Game
+from pacman.game import Game
 from deepq.ai_example import get_suggested_move
 
 

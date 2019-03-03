@@ -1,11 +1,14 @@
 import pygame
 import graphics.draw_board as b
-from initializer import initialize_gamestate_from_file
-from keymapper import map_key_to_move
-import gamelogic
+from pacman import gamelogic
+from pacman.initializer import initialize_gamestate_from_file
+from pacman.keymapper import map_key_to_move
+
 
 MOVE_GHOST_EVENT = pygame.USEREVENT+1
 PACMAN_TICK = pygame.USEREVENT+2
+
+# TODO: Embed AI in game or game in AI?
 
 
 class Game:
@@ -57,10 +60,13 @@ class Game:
                 self.gamestate.pacman.set_move(move)
 
             self.handle_input_action(event)
-
             gamelogic.check_collisions(self.gamestate)
+            # TODO: Add to AI memory
 
         self.animate()
 
         # Limit FPS to 60 (still unnecessarily high)
         self.clock.tick(60)
+
+        # TODO: Return reward and next
+        return self.gamestate

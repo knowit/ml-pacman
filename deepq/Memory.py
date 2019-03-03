@@ -14,4 +14,3 @@ class Memory:
         memory_size = len(self.buffer)
         indices = np.random.choice(np.arange(memory_size), batch_size, replace=False)
         return [self.buffer[i] for i in indices]
-    

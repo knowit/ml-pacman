@@ -1,4 +1,4 @@
-import gamelogic
+from pacman import gamelogic
 
 
 class Existence:

@@ -1,5 +1,5 @@
 import random
-import gamelogic
+from pacman import gamelogic
 
 
 # The game is supplied one function that it will call for every time the game updates.

@@ -18,7 +18,7 @@ def draw_item(item, screen):
     elif type(item) == Ghost:
         animate_item(item, screen, 0.1, item.previous_move == "LEFT")
     else:
-        screen.blit(load.get_image('./images/' + item.get_icon()),
+        screen.blit(load.get_image('../images/' + item.get_icon()),
                     translate_position_to_pixels(item.get_position()))
 
 
@@ -33,7 +33,7 @@ def animate_item(item, screen, animation_delta, flipped):
     pixel_position = translate_position_to_pixels(item.get_position())
     pixel_position_offset = pixel_position[0] - direction_offset[0], pixel_position[1] - direction_offset[1]
 
-    image = load.get_image('./images/' + item.get_icon(), force_reload=type(item) == Ghost)
+    image = load.get_image('../images/' + item.get_icon(), force_reload=type(item) == Ghost)
     if flipped:
             image = pygame.transform.flip(image, True, False)
 

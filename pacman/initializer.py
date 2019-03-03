@@ -3,7 +3,7 @@ from objects.fruit import Fruit
 from objects.wall import Wall
 from objects.ghost import Ghost
 from objects.dot import Dot
-from gamestate import GameState
+from pacman.gamestate import GameState
 
 
 def translate_input_symbol_to_object(position, gamestate, symbol):
@@ -29,7 +29,7 @@ def read_level(level):
     y_pointer = 0
     x_pointer = 0
     gamestate = GameState()
-    with open("./boards/" + level + '.txt', "r") as f:
+    with open("../boards/" + level + '.txt', "r") as f:
         f = f.read().splitlines()
         gamestate.dimensions = [len(f), len(f[0])]
         for y in f:
