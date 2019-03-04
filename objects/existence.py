@@ -1,4 +1,5 @@
 from pacman import gamelogic
+from pacman.gamelogic import MoveEvent
 
 
 class Existence:
@@ -29,6 +30,9 @@ class Existence:
         self.previous_position = self.position
         if self.is_move_valid(direction):
             self.position = self.position[0] + direction[0], self.position[1] + direction[1]
+            return True
+        else:
+            return False
 
     def is_move_valid(self, direction):
         old_position = self.position

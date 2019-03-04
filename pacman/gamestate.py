@@ -1,3 +1,5 @@
+from functools import reduce
+
 
 class GameState:
     def __init__(self):
@@ -22,6 +24,14 @@ class GameState:
     def get_active_dots(self):
         return [dot for dot in self.dots if not dot.is_eaten]
 
+    def get_number_of_dots_eaten(self):
+        # TODO: Test
+        return reduce((lambda acc, dot: acc + 1 if dot.is_eaten else acc), self.dots, 0)
+
+    def get_number_of_fruits_eaten(self):
+        # TODO: Test
+        return reduce((lambda acc, fruit: acc + 1 if fruit.is_eaten else acc), self.fruits, 0)
+
     def get_wall_positions(self):
         return self.wall_positions
 
@@ -44,7 +54,7 @@ class GameState:
             score += fruit.score if fruit.is_eaten else 0
         for dot in self.dots:
             score += dot.score if dot.is_eaten else 0
-        return score - self.pacman.number_of_ticks
+        return score - self.pacman.number_of_ticks  # TODO: Score trenger ikke gå ned?
 
     # The order matters. It determines the drawing order
     def retrieve_all_active_items(self):

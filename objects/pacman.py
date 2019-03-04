@@ -1,8 +1,9 @@
-from objects.existence import Existence
-from objects.animated import Animated
-import utils.moves as moves
-from objects.fruit import Fruit
 import time
+
+import utils.moves as moves
+from objects.animated import Animated
+from objects.existence import Existence
+from objects.fruit import Fruit
 
 
 class Pacman(Existence):
@@ -42,11 +43,9 @@ class Pacman(Existence):
 
     def tick(self):
         direction = moves.DIRECTION_FROM_MOVE[self.current_move]
-        super().move(direction)
+        is_move_valid = super().move(direction)
         self.handle_action()
         self.time_at_last_tick = time.time()
         self.number_of_ticks += 1
 
-
-
-
+        return is_move_valid
