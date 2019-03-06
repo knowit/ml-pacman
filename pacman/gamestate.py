@@ -11,6 +11,7 @@ class GameState:
         self.dimensions = []
         # As walls are static, we do not need to look them up every time we need to know
         self.wall_positions = []
+        self.last_game_event = None
 
     def __str__(self):
         board = self.get_text_representation_of_gamestate()

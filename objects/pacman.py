@@ -43,7 +43,7 @@ class Pacman(Existence):
 
     def tick(self):
         direction = moves.DIRECTION_FROM_MOVE[self.current_move]
-        is_move_valid = super().move(direction)
+        is_move_valid = super().move(direction)  # If not valid -> wall crash
         self.handle_action()
         self.time_at_last_tick = time.time()
         self.number_of_ticks += 1

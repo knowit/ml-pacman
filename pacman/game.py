@@ -1,8 +1,10 @@
+from copy import deepcopy
+
 import pygame
 
 import graphics.draw_board as b
 from pacman import gamelogic
-from pacman.gamelogic import MoveEvent, determine_move_event_by_comparing_game_states
+from pacman.gamelogic import ActionEvent, check_if_pacman_ate_food, check_ghost_collisions
 from pacman.gamestate import GameState
 from pacman.initializer import initialize_gamestate_from_file
 from pacman.keymapper import map_key_to_move
@@ -33,6 +35,9 @@ class Game:
             ghost.tick()
 
     def animate(self):
+        """
+            Draws game graphics
+        """
         # Wipe screen from previous cycle
         self.screen.fill((89, 54, 104))
 
@@ -47,12 +52,11 @@ class Game:
         move = map_key_to_move(event)
         self.game_state.pacman.set_move(move)
 
-    def execute_game_loop(self):
-        move_event = None
-
+    def execute_game_loop(self, ai_action = None):
         # Handle keyboard events for manual playing
         for event in pygame.event.get():
-            current_game_state = self.game_state
+            previous_game_state = deepcopy(self.game_state)
+            self.game_state.last_game_event = ActionEvent.NONE
 
             if event.type == pygame.QUIT:
                 self.done = True
@@ -61,20 +65,24 @@ class Game:
             if event.type == PACMAN_TICK:
                 is_move_valid = self.game_state.pacman.tick()
                 if not is_move_valid:
-                    move_event = MoveEvent.WALL
+                    self.game_state.last_game_event = ActionEvent.WALL
 
-            if self.ai_function:
-                move = self.ai_function(self.game_state)
-                self.game_state.pacman.set_move(move)
+            # if self.ai_function:
+            #     move = self.ai_function(self.game_state)
+            #     self.game_state.pacman.set_move(move)
 
-            if move_event is None:
+            if ai_action:
+                self.game_state.pacman.set_move(ai_action)
+            else:
                 self.handle_input_action(event)
-                move_event = determine_move_event_by_comparing_game_states(current_game_state, self.game_state)
-                gamelogic.check_ghost_collisions(self.game_state)
+
+            check_if_pacman_ate_food(previous_game_state, self.game_state)
+            check_ghost_collisions(self.game_state)
+            return self.game_state, self.game_state.last_game_event
 
         self.animate()
 
         # Limit FPS to 60 (still unnecessarily high)
         self.clock.tick(60)
 
-        return self.game_state, move_event
+        return None, None

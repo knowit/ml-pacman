@@ -3,7 +3,7 @@ from enum import Enum
 from pacman.gamestate import GameState
 
 
-class MoveEvent(Enum):
+class ActionEvent(Enum):
     DOT = 1
     CAPTURED_BY_GHOST = 2
     FRUIT = 3
@@ -38,10 +38,10 @@ def check_ghost_collisions(gamestate):
         if ghost.position == gamestate.pacman.position:
             if ghost.frightened:
                 ghost.respawn()
-                gamestate.last_game_event = MoveEvent.CAPTURED_FRIGHTENED_GHOST
+                gamestate.last_game_event = ActionEvent.CAPTURED_FRIGHTENED_GHOST
             else:
                 reset(gamestate)
-                gamestate.last_game_event = MoveEvent.CAPTURED_BY_GHOST
+                gamestate.last_game_event = ActionEvent.CAPTURED_BY_GHOST
 
     return None
 
@@ -60,11 +60,9 @@ def check_if_pacman_ate_food(
 
     """
     if has_eaten_dot(current_game_state, next_game_state):
-        print("DOT")
-        next_game_state.last_game_event = MoveEvent.DOT
+        next_game_state.last_game_event = ActionEvent.DOT
     elif has_eaten_fruit(current_game_state, next_game_state):
-        print("FRUIT")
-        next_game_state.last_game_event = MoveEvent.FRUIT
+        next_game_state.last_game_event = ActionEvent.FRUIT
 
 
 def has_eaten_dot(current_game_state, next_game_state):
@@ -78,8 +76,6 @@ def has_eaten_dot(current_game_state, next_game_state):
         Boolean
     """
     dots_diff = next_game_state.get_number_of_dots_eaten() - current_game_state.get_number_of_dots_eaten()
-    print(current_game_state.get_number_of_dots_eaten())
-    print(next_game_state.get_number_of_dots_eaten())
     if dots_diff == 1:
         return True
     elif dots_diff != 1 and dots_diff != 0:
@@ -107,14 +103,30 @@ def has_eaten_fruit(current_game_state, next_game_state):
         return False
 
 
-def get_next_gamestate_from_move(gamestate, move):
-    gamestate_copy = copy.deepcopy(gamestate)
-    gamestate_copy.pacman.set_move(move)
-    gamestate_copy.pacman.tick()
-    
-    for ghost in gamestate_copy.ghosts:
+def get_next_game_state_from_action(current_game_state, action):
+    """
+
+    Args:
+        current_game_state (GameState):
+        action:
+
+    Returns:
+
+    """
+    next_game_state = copy.deepcopy(current_game_state)
+    next_game_state.pacman.set_move(action)
+
+    is_move_valid = next_game_state.pacman.tick()
+    if not is_move_valid:
+        next_game_state.last_game_event = ActionEvent.WALL
+
+    check_if_pacman_ate_food(current_game_state, next_game_state)
+
+    for ghost in next_game_state.ghosts:
         ghost.tick()
-    return gamestate_copy
+
+    check_ghost_collisions(next_game_state)
+    return next_game_state, next_game_state.last_game_event
 
 
 def get_next_gamestate_DEBUG(gamestate):
@@ -125,12 +137,12 @@ def get_next_gamestate_DEBUG(gamestate):
     print('|')
     print('\\/')
     for move in ["UP", "LEFT", "DOWN", "RIGHT"]:
-        print(get_next_gamestate_from_move(gamestate, move))
+        print(get_next_game_state_from_action(gamestate, move))
 
 
 # Returns how the gamestate would look if current move is executed
 def get_next_gamestate_by_move(gamestate):
-    return {move: get_next_gamestate_from_move(gamestate, move) for move in ["UP", "LEFT", "DOWN", "RIGHT"]}
+    return {move: get_next_game_state_from_action(gamestate, move) for move in ["UP", "LEFT", "DOWN", "RIGHT"]}
 
 
 def is_wall(gamestate, position):

@@ -1,5 +1,5 @@
 from pacman import gamelogic
-from pacman.gamelogic import MoveEvent
+from pacman.gamelogic import ActionEvent
 
 
 class Existence:
