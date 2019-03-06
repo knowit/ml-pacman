@@ -11,6 +11,7 @@ class MoveEvent(Enum):
     GHOST_FRIGHTENED = 5
     CAPTURED_FRIGHTENED_GHOST = 6
     WALL = 7
+    NONE = 8
     # TODO: Frightened ghost?
 
 
@@ -37,20 +38,20 @@ def check_ghost_collisions(gamestate):
         if ghost.position == gamestate.pacman.position:
             if ghost.frightened:
                 ghost.respawn()
-                return MoveEvent.CAPTURED_FRIGHTENED_GHOST
+                gamestate.last_game_event = MoveEvent.CAPTURED_FRIGHTENED_GHOST
             else:
                 reset(gamestate)
-                return MoveEvent.CAPTURED_BY_GHOST
+                gamestate.last_game_event = MoveEvent.CAPTURED_BY_GHOST
 
     return None
 
 
-def determine_move_event_by_comparing_game_states(
+def check_if_pacman_ate_food(
         current_game_state,
         next_game_state
 ):
     """
-        Determine if Pac-Man has eaten food or captured ghost
+        Determine if Pac-Man has eaten food
     Args:
         current_game_state (GameState):
         next_game_state (GameState):
@@ -58,13 +59,12 @@ def determine_move_event_by_comparing_game_states(
     Returns:
 
     """
-    ghost_collision_event = check_ghost_collisions(next_game_state)
-    if ghost_collision_event is not None:
-        return ghost_collision_event
-    elif has_eaten_dot(current_game_state, next_game_state):
-        return MoveEvent.DOT
+    if has_eaten_dot(current_game_state, next_game_state):
+        print("DOT")
+        next_game_state.last_game_event = MoveEvent.DOT
     elif has_eaten_fruit(current_game_state, next_game_state):
-        return MoveEvent.FRUIT
+        print("FRUIT")
+        next_game_state.last_game_event = MoveEvent.FRUIT
 
 
 def has_eaten_dot(current_game_state, next_game_state):
@@ -78,6 +78,8 @@ def has_eaten_dot(current_game_state, next_game_state):
         Boolean
     """
     dots_diff = next_game_state.get_number_of_dots_eaten() - current_game_state.get_number_of_dots_eaten()
+    print(current_game_state.get_number_of_dots_eaten())
+    print(next_game_state.get_number_of_dots_eaten())
     if dots_diff == 1:
         return True
     elif dots_diff != 1 and dots_diff != 0:
@@ -109,6 +111,7 @@ def get_next_gamestate_from_move(gamestate, move):
     gamestate_copy = copy.deepcopy(gamestate)
     gamestate_copy.pacman.set_move(move)
     gamestate_copy.pacman.tick()
+    
     for ghost in gamestate_copy.ghosts:
         ghost.tick()
     return gamestate_copy
