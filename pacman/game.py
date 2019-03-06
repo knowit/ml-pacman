@@ -55,7 +55,7 @@ class Game:
     def execute_game_loop(self, ai_action = None):
         # Handle keyboard events for manual playing
         for event in pygame.event.get():
-            previous_game_state = deepcopy(self.game_state)
+            # previous_game_state = deepcopy(self.game_state)
             self.game_state.last_game_event = ActionEvent.NONE
 
             if event.type == pygame.QUIT:
@@ -76,13 +76,13 @@ class Game:
             else:
                 self.handle_input_action(event)
 
-            check_if_pacman_ate_food(previous_game_state, self.game_state)
-            check_ghost_collisions(self.game_state)
-            return self.game_state, self.game_state.last_game_event
+            # check_if_pacman_ate_food(previous_game_state, self.game_state)
+            # check_ghost_collisions(self.game_state)
+            # return self.game_state, self.game_state.last_game_event
 
         self.animate()
 
         # Limit FPS to 60 (still unnecessarily high)
         self.clock.tick(60)
 
-        return None, None
+        # return None, None
