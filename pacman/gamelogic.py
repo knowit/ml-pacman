@@ -37,11 +37,11 @@ def check_ghost_collisions(gamestate):
     for ghost in gamestate.ghosts:
         if ghost.position == gamestate.pacman.position:
             if ghost.frightened:
-                ghost.respawn()
                 gamestate.last_game_event = ActionEvent.CAPTURED_FRIGHTENED_GHOST
+                ghost.respawn()
             else:
-                reset(gamestate)
                 gamestate.last_game_event = ActionEvent.CAPTURED_BY_GHOST
+                reset(gamestate)
 
     return None
 
