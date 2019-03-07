@@ -62,7 +62,7 @@ class Game:
             if event.type == MOVE_GHOST_EVENT:
                 self.move_ghosts()
             if event.type == PACMAN_TICK:
-                is_move_valid = self.game_state.pacman.tick()
+                is_move_valid = self.game_state.pacman.tick(self.game_state)
                 if not is_move_valid:
                     self.game_state.last_game_event = ActionEvent.WALL
 
@@ -71,7 +71,7 @@ class Game:
                 self.game_state.pacman.set_move(move)
 
             self.handle_input_action(event)
-            
+
             gamelogic.check_ghost_collisions(self.game_state)
 
         self.animate()

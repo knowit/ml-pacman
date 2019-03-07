@@ -10,6 +10,9 @@ class Memory:
     def add(self, experience):
         self.buffer.append(experience)
 
+    def get(self, index):
+        return self.buffer[index]
+
     def get_mini_batch(self, batch_size):
         memory_size = len(self.buffer)
         indices = np.random.choice(np.arange(memory_size), batch_size, replace=False)

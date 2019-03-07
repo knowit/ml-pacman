@@ -3,19 +3,19 @@ from pacman.actions import Action
 
 class Experience:
 
-    def __init__(self, current_state, action, reward, next_state):
+    def __init__(self, current_game_state, action, reward, next_game_state):
         """
 
         Args:
-            current_state (GameState):
+            current_game_state (GameState):
             action (Action):
             reward (int):
-            next_state (GameState):
+            next_game_state (GameState):
         """
-        self.current_state = current_state
+        self.current_game_state = current_game_state
         self.action = action
         self.reward = reward
-        self.next_state = next_state
+        self.next_game_state = next_game_state
 
     # def __str__(self):
     #     return self.current_state

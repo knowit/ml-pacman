@@ -75,11 +75,11 @@ def has_eaten_dot(current_game_state, next_game_state):
     Returns:
         Boolean
     """
-    dots_diff = next_game_state.get_number_of_dots_eaten() - current_game_state.get_number_of_dots_eaten()
+    dots_diff = current_game_state.num_dots_left - next_game_state.num_dots_left
     if dots_diff == 1:
         return True
     elif dots_diff != 1 and dots_diff != 0:
-        raise Exception("Error: dots_diff should be 0 or 1")
+        raise Exception("Error: dots_diff should be 0 or 1. Dots diff:", dots_diff)
     else:
         return False
 
@@ -94,7 +94,7 @@ def has_eaten_fruit(current_game_state, next_game_state):
     Returns:
         Boolean
     """
-    fruits_diff = next_game_state.get_number_of_fruits_eaten() - current_game_state.get_number_of_fruits_eaten()
+    fruits_diff = current_game_state.num_fruits_left - next_game_state.num_fruits_left
     if fruits_diff == 1:
         return True
     elif fruits_diff != 1 and fruits_diff != 0:
@@ -116,7 +116,7 @@ def get_next_game_state_from_action(current_game_state, action):
     next_game_state = copy.deepcopy(current_game_state)
     next_game_state.pacman.set_move(action)
 
-    is_move_valid = next_game_state.pacman.tick()
+    is_move_valid = next_game_state.pacman.tick(next_game_state)
     if not is_move_valid:
         next_game_state.last_game_event = ActionEvent.WALL
 
