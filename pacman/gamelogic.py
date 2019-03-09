@@ -60,9 +60,11 @@ def check_if_pacman_ate_food(
 
     """
     if has_eaten_dot(current_game_state, next_game_state):
-        next_game_state.last_game_event = ActionEvent.DOT
+        return ActionEvent.DOT
     elif has_eaten_fruit(current_game_state, next_game_state):
-        next_game_state.last_game_event = ActionEvent.FRUIT
+        return ActionEvent.FRUIT
+    else:
+        return None
 
 
 def has_eaten_dot(current_game_state, next_game_state):
@@ -119,8 +121,12 @@ def get_next_game_state_from_action(current_game_state, action):
     is_move_valid = next_game_state.pacman.tick(next_game_state)
     if not is_move_valid:
         next_game_state.last_game_event = ActionEvent.WALL
+    else:
+        next_game_state.last_game_event = ActionEvent.NONE
 
-    check_if_pacman_ate_food(current_game_state, next_game_state)
+    eaten_food = check_if_pacman_ate_food(current_game_state, next_game_state)
+    if eaten_food is not None:
+        next_game_state.last_game_event = eaten_food
 
     for ghost in next_game_state.ghosts:
         ghost.tick()
