@@ -33,6 +33,7 @@ class Game:
         while not self.done:
             if q_table:
                 action = pick_optimal_action(self.game_state, q_table, True)
+                print(action)
                 self.execute_game_loop(ai_action=action.value)
             else:
                 self.execute_game_loop()

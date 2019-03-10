@@ -1,6 +1,7 @@
 import copy
 from enum import Enum
 from pacman.gamestate import GameState
+from copy import deepcopy
 
 
 class ActionEvent(Enum):
@@ -12,6 +13,7 @@ class ActionEvent(Enum):
     CAPTURED_FRIGHTENED_GHOST = 6
     WALL = 7
     NONE = 8
+    WIN = 9
     # TODO: Frightened ghost?
 
 
@@ -33,17 +35,17 @@ def reset(gamestate):
     gamestate.pacman.respawn()
 
 
-def check_ghost_collisions(gamestate):
-    for ghost in gamestate.ghosts:
-        if ghost.position == gamestate.pacman.position:
+def check_ghost_collisions(game_state):
+    for ghost in game_state.ghosts:
+        if ghost.position == game_state.pacman.position:
             if ghost.frightened:
-                gamestate.last_game_event = ActionEvent.CAPTURED_FRIGHTENED_GHOST
+                game_state.last_game_event = ActionEvent.CAPTURED_FRIGHTENED_GHOST
                 ghost.respawn()
             else:
-                gamestate.last_game_event = ActionEvent.CAPTURED_BY_GHOST
-                reset(gamestate)
+                game_state.last_game_event = ActionEvent.CAPTURED_BY_GHOST
+                return True
 
-    return None
+    return False
 
 
 def check_if_pacman_ate_food(
@@ -105,12 +107,13 @@ def has_eaten_fruit(current_game_state, next_game_state):
         return False
 
 
-def get_next_game_state_from_action(current_game_state, action):
+def get_next_game_state_from_action(current_game_state, action, game):
     """
 
     Args:
         current_game_state (GameState):
         action:
+        game:
 
     Returns:
 
@@ -126,12 +129,17 @@ def get_next_game_state_from_action(current_game_state, action):
 
     eaten_food = check_if_pacman_ate_food(current_game_state, next_game_state)
     if eaten_food is not None:
-        next_game_state.last_game_event = eaten_food
+        if next_game_state.num_dots_left == 0:
+            next_game_state.last_game_event = ActionEvent.WIN
+        else:
+            next_game_state.last_game_event = eaten_food
 
     for ghost in next_game_state.ghosts:
         ghost.tick()
 
-    check_ghost_collisions(next_game_state)
+    if check_ghost_collisions(next_game_state):
+        next_game_state = game.initial_game_state
+
     return next_game_state, next_game_state.last_game_event
 
 

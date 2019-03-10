@@ -1,5 +1,5 @@
 from functools import reduce
-
+import collections
 
 class GameState:
     def __init__(self):
@@ -20,6 +20,37 @@ class GameState:
         collapsed = [''.join(row) for row in board]
 
         return '\n'.join(collapsed)
+
+    def __hash__(self):
+        obj_hash = hash(self.pacman.position)
+
+        for w in self.walls:
+            obj_hash += hash(w.position)
+
+        for f in self.fruits:
+            obj_hash += hash(f.position)
+
+        for g in self.ghosts:
+            obj_hash += hash(g.position)
+
+        for d in self.dots:
+            obj_hash += hash(d.position)
+
+        return obj_hash
+
+    def __eq__(self, other):
+        if isinstance(other, GameState):
+            if self.pacman.position != other.pacman.position:
+                return False
+            if collections.Counter([w.position for w in self.walls]) != collections.Counter([w.position for w in other.walls]):
+                return False
+            if collections.Counter([w.position for w in self.fruits]) != collections.Counter([w.position for w in other.fruits]):
+                return False
+            if collections.Counter([w.position for w in self.ghosts]) != collections.Counter([w.position for w in other.ghosts]):
+                return False
+            if collections.Counter([w.position for w in self.dots]) != collections.Counter([w.position for w in other.dots]):
+                return False
+        return True
 
     def get_active_fruits(self):
         return [fruit for fruit in self.fruits if not fruit.is_eaten]
