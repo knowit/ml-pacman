@@ -1,7 +1,7 @@
 import numpy as np
 
 from copy import deepcopy
-
+import time
 import pygame
 
 from deepq.Experience import Experience
@@ -70,6 +70,7 @@ class DeepQMain:
 
         ## METHOD2
         count = 0
+        now = time.time()
         while not done:
             pygame.event.get()
             action = pick_action(current_game_state)
@@ -80,12 +81,13 @@ class DeepQMain:
             game.game_state = next_game_state
 
             # print(game.game_state)
-            game.animate()
+            # game.animate()
 
             current_game_state = deepcopy(next_game_state)
             count += 1
             if count % 1000 == 0:
                 print(count)
+                print(now - time.time())
 
 deepQ = DeepQMain()
 deepQ.train()

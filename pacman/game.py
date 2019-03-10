@@ -9,6 +9,8 @@ from pacman.gamestate import GameState
 from pacman.initializer import initialize_gamestate_from_file
 from pacman.keymapper import map_key_to_move
 
+import time
+
 MOVE_GHOST_EVENT = pygame.USEREVENT+1
 PACMAN_TICK = pygame.USEREVENT+2
 
@@ -16,19 +18,24 @@ PACMAN_TICK = pygame.USEREVENT+2
 
 
 class Game:
-    def __init__(self, level, ai_function=None):
+    def __init__(self, level, a, ai_function=None):
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600))
         self.clock = pygame.time.Clock()
-        self.game_state = initialize_gamestate_from_file(level)
+        self.initial_game_state = initialize_gamestate_from_file(level)
+        self.game_state = self.initial_game_state
         self.done = False
         self.ai_function = ai_function
-        pygame.time.set_timer(MOVE_GHOST_EVENT, 400)
-        pygame.time.set_timer(PACMAN_TICK, 400)
+        pygame.time.set_timer(MOVE_GHOST_EVENT, a)
+        pygame.time.set_timer(PACMAN_TICK, a)
 
-    def run(self):
+    def run(self, q_table=None, pick_optimal_action=None):
         while not self.done:
-            self.execute_game_loop()
+            if q_table:
+                action = pick_optimal_action(self.game_state, q_table, True)
+                self.execute_game_loop(ai_action=action.value)
+            else:
+                self.execute_game_loop()
 
     def move_ghosts(self):
         for ghost in self.game_state.ghosts:
@@ -52,7 +59,7 @@ class Game:
         move = map_key_to_move(event)
         self.game_state.pacman.set_move(move)
 
-    def execute_game_loop(self, ai_action = None):
+    def execute_game_loop(self, ai_action=None, animate=True):
         # Handle keyboard events for manual playing
         for event in pygame.event.get():
             # previous_game_state = deepcopy(self.game_state)
@@ -77,11 +84,12 @@ class Game:
                 self.handle_input_action(event)
 
             # check_if_pacman_ate_food(previous_game_state, self.game_state)
-            # check_ghost_collisions(self.game_state)
             # return self.game_state, self.game_state.last_game_event
 
-        self.animate()
+        if animate:
+            self.animate()
 
+        check_ghost_collisions(self.game_state)
         # Limit FPS to 60 (still unnecessarily high)
         self.clock.tick(60)
 
