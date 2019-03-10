@@ -4,6 +4,8 @@ import utils.moves as moves
 from objects.animated import Animated
 from objects.existence import Existence
 from objects.fruit import Fruit
+from objects.dot import Dot
+from pacman.gamestate import GameState
 
 
 class Pacman(Existence):
@@ -29,7 +31,15 @@ class Pacman(Existence):
             return
         self.current_move = move
 
-    def handle_action(self):
+    def handle_action(self, game_state):
+        """
+
+        Args:
+            game_state (GameState):
+
+        Returns:
+
+        """
         active_items = []
         active_items.extend(self.gamestate.get_active_fruits())
         active_items.extend(self.gamestate.get_active_dots())
@@ -37,14 +47,17 @@ class Pacman(Existence):
         for item in active_items:
             if item.position == self.position:
                 item.eat()
+                if type(item) == Dot:
+                    game_state.num_dots_left -= 1
                 if type(item) == Fruit:
+                    game_state.num_fruits_left -= 1
                     for ghost in self.gamestate.ghosts:
                         ghost.frighten()
 
-    def tick(self):
+    def tick(self, game_state):
         direction = moves.DIRECTION_FROM_MOVE[self.current_move]
         is_move_valid = super().move(direction)  # If not valid -> wall crash
-        self.handle_action()
+        self.handle_action(game_state)
         self.time_at_last_tick = time.time()
         self.number_of_ticks += 1
 

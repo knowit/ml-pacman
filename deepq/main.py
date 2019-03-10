@@ -46,29 +46,9 @@ class DeepQMain:
         memory = Memory(max_size=10)
 
         # TODO: Init DeepQNetwork
+
         done = False
 
-        ## METHOD 1
-        # while not done:
-        #     action = pick_action(current_game_state)
-        #     game_feedback = game.execute_game_loop()
-        #
-        #     if game_feedback is not None:
-        #         next_game_state, move_event = game.execute_game_loop()
-        #
-        #         print(move_event)
-        #         reward = calculate_reward_for_move(move_event)
-        #         # print(reward)
-        #
-        #         experience = Experience(current_game_state, action, reward, next_game_state)
-        #         print(experience.next_state)
-        #         memory.add(experience)
-        #
-        #         current_game_state = deepcopy(next_game_state)
-
-            # game.run()
-
-        ## METHOD2
         count = 0
         now = time.time()
         while not done:
@@ -79,15 +59,23 @@ class DeepQMain:
 
             # print(action.value, action_event)
             game.game_state = next_game_state
-
             # print(game.game_state)
             # game.animate()
 
+            experience = Experience(
+                current_game_state=current_game_state,
+                action=action,
+                reward=calculate_reward_for_move(action),
+                next_game_state=next_game_state
+            )
+            memory.add(experience)
+
             current_game_state = deepcopy(next_game_state)
-            count += 1
-            if count % 1000 == 0:
-                print(count)
-                print(now - time.time())
+
+            # count += 1
+            # if count == 10:
+            #     print(count)
+            #     break
 
 deepQ = DeepQMain()
 deepQ.train()

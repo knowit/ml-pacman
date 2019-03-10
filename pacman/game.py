@@ -62,7 +62,6 @@ class Game:
     def execute_game_loop(self, ai_action=None, animate=True):
         # Handle keyboard events for manual playing
         for event in pygame.event.get():
-            # previous_game_state = deepcopy(self.game_state)
             self.game_state.last_game_event = ActionEvent.NONE
 
             if event.type == pygame.QUIT:
@@ -70,18 +69,15 @@ class Game:
             if event.type == MOVE_GHOST_EVENT:
                 self.move_ghosts()
             if event.type == PACMAN_TICK:
-                is_move_valid = self.game_state.pacman.tick()
+                is_move_valid = self.game_state.pacman.tick(self.game_state)
                 if not is_move_valid:
                     self.game_state.last_game_event = ActionEvent.WALL
 
-            # if self.ai_function:
-            #     move = self.ai_function(self.game_state)
-            #     self.game_state.pacman.set_move(move)
+            if self.ai_function:
+                move = self.ai_function(self.game_state)
+                self.game_state.pacman.set_move(move)
 
-            if ai_action:
-                self.game_state.pacman.set_move(ai_action)
-            else:
-                self.handle_input_action(event)
+            self.handle_input_action(event)
 
             # check_if_pacman_ate_food(previous_game_state, self.game_state)
             # return self.game_state, self.game_state.last_game_event
@@ -92,5 +88,3 @@ class Game:
         check_ghost_collisions(self.game_state)
         # Limit FPS to 60 (still unnecessarily high)
         self.clock.tick(60)
-
-        # return None, None

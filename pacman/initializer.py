@@ -11,6 +11,7 @@ def translate_input_symbol_to_object(position, gamestate, symbol):
         gamestate.pacman = Pacman(position, gamestate)
     if symbol == "o":
         gamestate.fruits.append(Fruit(position, gamestate))
+        gamestate.num_fruits_left += 1
     if symbol == "%":
         gamestate.walls.append(Wall(position, gamestate))
         gamestate.wall_positions.append(position)
@@ -18,6 +19,7 @@ def translate_input_symbol_to_object(position, gamestate, symbol):
         gamestate.ghosts.append(Ghost(position, gamestate))
     if symbol == ".":
         gamestate.dots.append(Dot(position, gamestate))
+        gamestate.num_dots_left += 1
 
 
 def initialize_gamestate_from_file(file):
