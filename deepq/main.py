@@ -52,11 +52,14 @@ class DeepQMain:
         count = 0
         while not done:
             pygame.event.get()
-            action = pick_action(current_game_state)
+            # action = pick_action(current_game_state)
+            action = Action.RIGHT
+            if count > 8:
+                action = Action.LEFT
             next_game_state, action_event = get_next_game_state_from_action(current_game_state, action.value)
             reward = calculate_reward_for_move(action_event)
 
-            # print(action.value, action_event)
+            print(count, action.value, action_event)
             game.game_state = next_game_state
             # print(game.game_state)
             game.animate()
@@ -69,6 +72,10 @@ class DeepQMain:
             )
             memory.add(experience)
 
+            nparray = np.asarray(next_game_state.get_text_representation_of_gamestate())
+            print(nparray.shape)
+
+
             current_game_state = deepcopy(next_game_state)
 
 
@@ -76,7 +83,7 @@ class DeepQMain:
 
 
 
-            # count += 1
+            count += 1
             # if count == 10:
             #     print(count)
             #     break
