@@ -6,6 +6,7 @@ import pygame
 
 from deepq.Experience import Experience
 from deepq.Memory import Memory
+from deepq.ann import DeepQ
 from deepq.rewards import Reward
 from pacman.actions import Action
 from pacman.game import Game
@@ -47,9 +48,14 @@ class DeepQMain:
 
         # TODO: Init DeepQNetwork
 
+        model = DeepQ().model
+        gamma = 0.95
+
         done = False
 
         count = 0
+
+        # TODO: Pre-train to fill up memory
         while not done:
             pygame.event.get()
             # action = pick_action(current_game_state)
@@ -57,6 +63,7 @@ class DeepQMain:
             if count > 8:
                 action = Action.LEFT
             next_game_state, action_event = get_next_game_state_from_action(current_game_state, action.value)
+
             reward = calculate_reward_for_move(action_event)
 
             print(count, action.value, action_event)
@@ -64,29 +71,41 @@ class DeepQMain:
             # print(game.game_state)
             game.animate()
 
+            if action_event == ActionEvent.LOST:
+                done = True
+
             experience = Experience(
-                current_game_state=current_game_state,
+                current_state=current_game_state,
                 action=action,
-                reward=calculate_reward_for_move(action),
-                next_game_state=next_game_state
+                reward=reward,
+                next_state=next_game_state,
+                done=done
             )
             memory.add(experience)
 
-            nparray = np.asarray(next_game_state.get_text_representation_of_gamestate())
-            print(nparray.shape)
-
+            # nparray = np.asarray(next_game_state.get_text_representation_of_gamestate())
+            # print(nparray.shape)
 
             current_game_state = deepcopy(next_game_state)
-
-
-
-
-
 
             count += 1
             # if count == 10:
             #     print(count)
             #     break
+
+        y_train = []  # Target Q-value
+        batch = memory.get_mini_batch(batch_size=20)
+
+        sample: Experience
+        for sample in batch:
+            y_target = model.predict(sample.current_state)  # TODO: wrap in list?
+            # Terminal state: Q-target = reward
+            if sample.done:
+                y_target[0][sample.action](sample.reward)
+            else:
+                y_target.append(sample.reward + gamma * np.max(model.predict(sample.next_state)))  # TODO
+
+
 
 deepQ = DeepQMain()
 deepQ.train()

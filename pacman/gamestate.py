@@ -51,6 +51,9 @@ class GameState:
             return True
         return False
 
+    def has_lost(self):
+        return self.pacman.lives <= 0
+
     def calculate_score(self):
         score = 0
         for fruit in self.fruits:

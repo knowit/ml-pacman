@@ -2,10 +2,10 @@ from enum import Enum
 
 
 class Action(Enum):
-    UP = "UP"
-    RIGHT = "RIGHT"
-    DOWN = "DOWN"
-    LEFT = "LEFT"
+    UP = 0
+    RIGHT = 1
+    DOWN = 2
+    LEFT = 3
 
     @staticmethod
     def get_all_actions():

@@ -12,6 +12,8 @@ class ActionEvent(Enum):
     CAPTURED_FRIGHTENED_GHOST = 6
     WALL = 7
     NONE = 8
+    WON = 9
+    LOST = 10
     # TODO: Frightened ghost?
 
 
@@ -131,7 +133,14 @@ def get_next_game_state_from_action(current_game_state, action):
     for ghost in next_game_state.ghosts:
         ghost.tick()
 
-    check_ghost_collisions(next_game_state)
+    check_ghost_collisions(next_game_state)  # TODO: Check ghost collision after ghost moves and pac-man moves
+
+    if next_game_state.has_won():
+        next_game_state.last_game_event = ActionEvent.WON
+
+    if next_game_state.has_lost():
+        next_game_state.last_game_event = ActionEvent.LOST
+
     return next_game_state, next_game_state.last_game_event
 
 
