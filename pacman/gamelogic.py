@@ -107,7 +107,7 @@ def has_eaten_fruit(current_game_state, next_game_state):
         return False
 
 
-def get_next_game_state_from_action(current_game_state, action, game):
+def get_next_game_state_from_action(current_game_state, action):
     """
 
     Args:
@@ -118,6 +118,33 @@ def get_next_game_state_from_action(current_game_state, action, game):
     Returns:
 
     """
+    # next_game_state = copy.deepcopy(current_game_state)
+    # next_game_state.pacman.set_move(action)
+    #
+    # is_move_valid = next_game_state.pacman.tick(next_game_state)
+    # if not is_move_valid:
+    #     next_game_state.last_game_event = ActionEvent.WALL
+    # else:
+    #     next_game_state.last_game_event = ActionEvent.NONE
+    #
+    # eaten_food = check_if_pacman_ate_food(current_game_state, next_game_state)
+    # if eaten_food is not None:
+    #     if next_game_state.num_dots_left == 0:
+    #         next_game_state = deepcopy(game.initial_game_state)
+    #         next_game_state.last_game_event = ActionEvent.WIN
+    #     else:
+    #         next_game_state.last_game_event = eaten_food
+    #
+    # for ghost in next_game_state.ghosts:
+    #     ghost.tick()
+    #
+    # if check_ghost_collisions(next_game_state):
+    #     next_game_state = deepcopy(game.initial_game_state)
+    #     next_game_state.last_game_event = ActionEvent.CAPTURED_BY_GHOST
+    #
+    # return next_game_state, next_game_state.last_game_event
+
+#     --------------------------------
     next_game_state = copy.deepcopy(current_game_state)
     next_game_state.pacman.set_move(action)
 
@@ -129,18 +156,18 @@ def get_next_game_state_from_action(current_game_state, action, game):
 
     eaten_food = check_if_pacman_ate_food(current_game_state, next_game_state)
     if eaten_food is not None:
-        if next_game_state.num_dots_left == 0:
-            next_game_state = deepcopy(game.initial_game_state)
-            next_game_state.last_game_event = ActionEvent.WIN
-        else:
-            next_game_state.last_game_event = eaten_food
+        next_game_state.last_game_event = eaten_food
 
     for ghost in next_game_state.ghosts:
         ghost.tick()
 
-    if check_ghost_collisions(next_game_state):
-        next_game_state = deepcopy(game.initial_game_state)
-        next_game_state.last_game_event = ActionEvent.CAPTURED_BY_GHOST
+    check_ghost_collisions(next_game_state)  # TODO: Check ghost collision after ghost moves and pac-man moves
+
+    if next_game_state.has_won():
+        next_game_state.last_game_event = ActionEvent.WON
+
+    if next_game_state.has_lost():
+        next_game_state.last_game_event = ActionEvent.LOST
 
     return next_game_state, next_game_state.last_game_event
 

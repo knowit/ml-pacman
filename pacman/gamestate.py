@@ -82,6 +82,9 @@ class GameState:
             return True
         return False
 
+    def has_lost(self):
+        
+
     def calculate_score(self):
         score = 0
         for fruit in self.fruits:

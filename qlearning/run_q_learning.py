@@ -91,7 +91,7 @@ def run():
 
         action = pick_action(current_game_state, q_table, i)
 
-        _, action_event = get_next_game_state_from_action(current_game_state, action.value, game)
+        _, action_event = get_next_game_state_from_action(current_game_state, action.value)
 
         # print(action)
         #
@@ -135,7 +135,7 @@ def run():
         print(action)
         game.animate()
 
-        _, action_event = get_next_game_state_from_action(current_game_state, action.value, game)
+        _, action_event = get_next_game_state_from_action(current_game_state, action.value)
 
         print(action_event)
 
