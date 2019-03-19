@@ -10,9 +10,9 @@ from pacman.game import Game
 from pacman.gamelogic import ActionEvent, get_next_game_state_from_action
 
 
-def pick_action(game_state, q_table):
+def pick_action(game_state, q_table, i):
     # TODO: Epsilon greedy
-    exploration_prob = 0.4
+    exploration_prob = 0.35
     if exploration_prob > np.random.rand():
         # Explore
         return np.random.choice(Action.get_all_actions())
@@ -23,7 +23,7 @@ def pick_action(game_state, q_table):
 
 def calculate_reward_for_move(action_event):
     if action_event == ActionEvent.DOT:
-        return 100
+        return 70
     elif action_event == ActionEvent.CAPTURED_BY_GHOST:
         return -50
     elif action_event == ActionEvent.NONE:
@@ -31,7 +31,7 @@ def calculate_reward_for_move(action_event):
     elif action_event == ActionEvent.WALL:
         return -5
     elif action_event == ActionEvent.WIN:
-        return 10000
+        return 1000
     else:
         return 0
 
@@ -87,9 +87,9 @@ def run():
 
     q_table = {}
 
-    for i in range(0, 5000):
+    for i in range(0, 20000):
 
-        action = pick_action(current_game_state, q_table)
+        action = pick_action(current_game_state, q_table, i)
 
         _, action_event = get_next_game_state_from_action(current_game_state, action.value, game)
 
@@ -122,14 +122,14 @@ def run():
     #
     # print(q_table.keys())
 
-    # new_game = Game('level-0', 1000)
+    new_game = Game('level-0', 2000)
     # new_game.run(q_table=q_table, pick_optimal_action=pick_optimal_action)
 
     current_game_state = deepcopy(game.initial_game_state)
 
     while not done:
 
-        time.sleep(4)
+        time.sleep(2.5)
 
         action = pick_optimal_action(current_game_state, q_table, True)
         print(action)

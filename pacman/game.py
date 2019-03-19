@@ -82,10 +82,13 @@ class Game:
 
             # check_if_pacman_ate_food(previous_game_state, self.game_state)
             # return self.game_state, self.game_state.last_game_event
+            if ai_action:
+                self.game_state.pacman.set_move(ai_action)
 
         if animate:
             self.animate()
 
-        check_ghost_collisions(self.game_state)
+        if check_ghost_collisions(self.game_state):
+            self.game_state = deepcopy(self.initial_game_state)
         # Limit FPS to 60 (still unnecessarily high)
         self.clock.tick(60)

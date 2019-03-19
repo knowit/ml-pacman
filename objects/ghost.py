@@ -114,6 +114,7 @@ class Ghost(Existence):
     def execute_move(self, next_move):
         self.previous_move = next_move
         direction = moves.DIRECTION_FROM_MOVE[next_move]
+        # direction = random.choice(list(moves.DIRECTION_FROM_MOVE.values()))
         super().move(direction)
 
     def set_mode(self, mode):
