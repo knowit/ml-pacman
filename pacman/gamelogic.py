@@ -13,7 +13,9 @@ class ActionEvent(Enum):
     CAPTURED_FRIGHTENED_GHOST = 6
     WALL = 7
     NONE = 8
-    WIN = 9
+    WON = 9
+    LOST = 10
+
     # TODO: Frightened ghost?
 
 
@@ -35,17 +37,17 @@ def reset(gamestate):
     gamestate.pacman.respawn()
 
 
-def check_ghost_collisions(game_state):
-    for ghost in game_state.ghosts:
-        if ghost.position == game_state.pacman.position:
+def check_ghost_collisions(gamestate):
+    for ghost in gamestate.ghosts:
+        if ghost.position == gamestate.pacman.position:
             if ghost.frightened:
-                game_state.last_game_event = ActionEvent.CAPTURED_FRIGHTENED_GHOST
+                gamestate.last_game_event = ActionEvent.CAPTURED_FRIGHTENED_GHOST
                 ghost.respawn()
             else:
-                game_state.last_game_event = ActionEvent.CAPTURED_BY_GHOST
-                return True
+                gamestate.last_game_event = ActionEvent.CAPTURED_BY_GHOST
+                reset(gamestate)
 
-    return False
+    return None
 
 
 def check_if_pacman_ate_food(
@@ -158,10 +160,12 @@ def get_next_game_state_from_action(current_game_state, action):
     if eaten_food is not None:
         next_game_state.last_game_event = eaten_food
 
+    check_ghost_collisions(next_game_state)
+
     for ghost in next_game_state.ghosts:
         ghost.tick()
 
-    check_ghost_collisions(next_game_state)  # TODO: Check ghost collision after ghost moves and pac-man moves
+    check_ghost_collisions(next_game_state)
 
     if next_game_state.has_won():
         next_game_state.last_game_event = ActionEvent.WON
