@@ -23,17 +23,17 @@ def pick_action(game_state, q_table, i):
 
 def calculate_reward_for_move(action_event):
     if action_event == ActionEvent.DOT:
-        return 70
+        return 5
     elif action_event == ActionEvent.CAPTURED_BY_GHOST:
-        return -50
+        return -5
     elif action_event == ActionEvent.NONE:
-        return -5
+        return -1
     elif action_event == ActionEvent.WALL:
-        return -5
+        return -1
     elif action_event == ActionEvent.WON:
-        return 1000
+        return 100
     elif action_event == ActionEvent.LOST:
-        return -1000
+        return -100
     else:
         return 0
 

@@ -17,7 +17,7 @@ from keras.optimizers import sgd
 def init_model():
     num_actions = 4
     hidden_size = 512
-    input_size = 100
+    input_size = 60
 
     model = Sequential()
     model.add(Dense(hidden_size, input_shape=(input_size,), activation='relu'))
@@ -29,41 +29,60 @@ def init_model():
 
 
 def convert_state_to_input(state):
-    return np.random.randint(2, size=(1, 100))
+
+    string_rep = state.__str__()
+
+    r = np.array([])
+
+    for char in string_rep:
+        # if char == '%':
+        #     r = np.concatenate([r, [0, 0, 0, 0, 1]])
+        if char == ' ':
+            r = np.concatenate([r, [0, 0, 0, 1, 0]])
+        if char == 'P':
+            r = np.concatenate([r, [0, 0, 1, 0, 0]])
+        if char == 'G':
+            r = np.concatenate([r, [0, 1, 0, 0, 0]])
+        if char == '.':
+            r = np.concatenate([r, [1, 0, 0, 0, 0]])
+
+    return r.reshape(1, 60)
     # return np.ones(shape=(1, 100))
 
 
-def pick_optimal_action(state, model):
+def pick_optimal_action(state, model, a):
+
     q = model.predict(convert_state_to_input(state))
 
-    print(q)
+    if a:
+        print(q)
 
     return Action.get_all_actions()[np.argmax(q[0])]
 
 
 def pick_action(game_state, model):
-    exploration_prob = 0.35
+    exploration_prob = 0.15
     if exploration_prob > np.random.rand():
         # Explore
         return np.random.choice(Action.get_all_actions())
     else:
         # Exploit
-        return pick_optimal_action(game_state, model)
+        return pick_optimal_action(game_state, model, False)
 
 
 def calculate_reward_for_move(action_event):
     if action_event == ActionEvent.DOT:
-        return 70
+        return 20
     elif action_event == ActionEvent.CAPTURED_BY_GHOST:
-        return -50
+        return -5
     elif action_event == ActionEvent.NONE:
-        return -5
+        return -1
     elif action_event == ActionEvent.WALL:
-        return -5
+        return -1
     elif action_event == ActionEvent.WON:
-        return 1000
+        return 100
     elif action_event == ActionEvent.LOST:
-        return -1000
+        return -50
     else:
         return 0
 
@@ -84,15 +103,18 @@ def run():
     game = Game('level-0', 400)
     now = time.time()
 
-    batch_size = 1
+    batch_size = 50
 
     exp_replay = ExperienceReplay()
     model = init_model()
 
-    for i in range(1, 10):
+    for i in range(1, 200):
 
         done = False
         current_game_state = deepcopy(game.initial_game_state)
+
+        print(i)
+        print(time.time() - now)
 
         while not done:
 
@@ -104,10 +126,29 @@ def run():
 
             reward = calculate_reward_for_move(action_event)
 
-            exp_replay.remember(states=[convert_state_to_input(current_game_state), convert_action_to_int(action), reward, convert_state_to_input(next_game_state)], game_over=done)
+            # print(current_game_state)
+            # print(action)
+            # print(reward)
+            # print(next_game_state)
+            #
+            # print('-----states------')
+
+            states = [convert_state_to_input(current_game_state), convert_action_to_int(action), reward, convert_state_to_input(next_game_state)]
+
+            # print(states)
+
+            exp_replay.remember(states=states, game_over=done)
 
             # Load batch of experiences
             inputs, targets = exp_replay.get_batch(model=model, batch_size=batch_size)
+
+            # print('----inputs------')
+            #
+            # print(inputs)
+            #
+            # print('----targets-----')
+            #
+            # print(targets)
 
             # train model on experiences
             model.train_on_batch(inputs, targets)
@@ -115,10 +156,12 @@ def run():
             current_game_state = deepcopy(next_game_state)
 
             # count += 1
-            if i % 5 == 0:
-                print(i)
-                print(time.time() - now)
+            # if i % 5 == 0:
+            #     print(i)
+            #     print(time.time() - now)
                 # now = time.time()
+
+            # time.sleep(10)
 
     current_game_state = deepcopy(game.initial_game_state)
 
@@ -129,7 +172,7 @@ def run():
     while not super_done:
         # pygame.event.get()
 
-        action = pick_optimal_action(current_game_state, model)
+        action = pick_optimal_action(current_game_state, model, True)
 
         print(action)
 
