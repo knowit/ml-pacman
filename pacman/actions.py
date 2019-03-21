@@ -10,4 +10,3 @@ class Action(Enum):
     @staticmethod
     def get_all_actions():
         return [action for action in Action]
-

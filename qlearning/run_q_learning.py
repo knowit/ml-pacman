@@ -78,6 +78,7 @@ def pick_optimal_action(state, q_table, printing=False):
 def run():
     game = Game('level-0', 400)
 
+
     discount = 0.8
     alpha = 0.2
 
