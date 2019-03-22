@@ -25,36 +25,40 @@ class DeepQ(object):
 
     def init_model(self):
 
-        self.model = Sequential()
-        self.model.add(Dense(self.config.hidden_size, input_shape=(self.config.input_size,), activation='relu'))
-        self.model.add(Dense(self.config.hidden_size, activation='relu'))
-        self.model.add(Dense(self.config.num_actions))
-        self.model.compile(sgd(lr=.01), "mse")
-
-        return self.model
+        # TODO: Make your own neural network with keras!
+        pass
 
     def convert_state_to_input(self, state):
-        string_rep = state.__str__()
-        r = np.array([])
 
-        for char in string_rep:
-            # if char == '%':
-            #     r = np.concatenate([r, [0, 0, 0, 0, 1]])
-            if char == ' ':
-                r = np.concatenate([r, [0, 0, 0, 1, 0]])
-            if char == 'P':
-                r = np.concatenate([r, [0, 0, 1, 0, 0]])
-            if char == 'G':
-                r = np.concatenate([r, [0, 1, 0, 0, 0]])
-            if char == '.':
-                r = np.concatenate([r, [1, 0, 0, 0, 0]])
+        # TODO: If you get confused by this, its ok... Ask Malte or Manu and we will try to explain :-)
 
-        return r.reshape(1, self.config.input_size)
+        # TODO: Alright, you've gotten this far. Now the fun part starts.
+        # TODO: We need somehow to represent a state. In q learning we held
+        # TODO: a state as a key in dictionary which works when the __eq__ and __hash__ functions
+        # TODO: are overwritten in the GameState object.
+
+        # TODO: However that doesn't work with neural networks. Neural networks needs numerical inputs.
+        # TODO: The easy way to do this is to one-hot-encode each
+        # TODO: possible "map-element" (Like pacman, ghost, wall, etc), and
+        # TODO: loop over each map-element and make a long list of integers of 1s and 0s.
+
+        # TODO: The length of this list is therefore based on how big your pacman map is. Therefore the size of
+        # TODO: the map will dictate the size of the input layer of your neural network.
+
+        # TODO: When that is done you need to make sure the input layer of your neural network are of the exact same
+        # TODO: length as this state-encoding. Therefore you need to make sure input_size in DeepQConfig is the same
+        # TODO: size as the list you return from this method.
+
+        pass
 
     def pick_optimal_action(self, state):
-        q = self.model.predict(self.convert_state_to_input(state))
-        return Action.get_all_actions()[np.argmax(q[0])]
 
+        # TODO: Do a prediction on the given state with the model you have.
+        # TODO: Return the action with the highest score
+
+        pass
+
+    # Identical to q_learn
     def pick_action(self, game_state):
         exploration_prob = 0.20
         if exploration_prob > np.random.rand():
@@ -66,9 +70,12 @@ class DeepQ(object):
 
     def train(self):
 
+        # Very close to the training part of regular q_learning.
+
         game = Game('level-0')
         tot_loss = {}
 
+        # TODO: change number of episodes needed for training.
         for i in range(1, self.config.episodes):
 
             loss = 0.
@@ -95,6 +102,8 @@ class DeepQ(object):
                 states = [self.convert_state_to_input(current_game_state), convert_action_to_int(action), reward,
                           self.convert_state_to_input(next_game_state)]
 
+                # We save the information about current_state, action, reward and next_state. In addition we need to
+                # know if the game is over.
                 self.exp_replay.remember(states=states, game_over=done)
 
                 # Load batch of experiences
@@ -122,17 +131,22 @@ class DeepQ(object):
 
     def run_model(self, model_path='./models/nn_model.h5'):
 
+        # Also closely related to the "runnable" part of regular q_learning
+
+        # Get saved model
         self.model = load_model(model_path)
         game = Game('level-0')
         clock = pygame.time.Clock()
         game.init_screen()
 
+        # TODO: Change how many times you want to see pacman play
         for i in range(10):
 
             current_game_state = deepcopy(game.initial_game_state)
             super_done = False
 
             while not super_done:
+
                 action = self.pick_optimal_action(current_game_state)
 
                 game.animate()

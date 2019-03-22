@@ -34,26 +34,11 @@ class ExperienceReplay(object):
         # for the other possible actions. The actions not take the same value as the prediction to not affect them
         targets = np.zeros((inputs.shape[0], num_actions))
 
-        # print('---------------------')
-        # print(len_memory)
-        # print(num_actions)
-        # print(env_dim)
-        # print(inputs)
-        # print(targets)
-
         # We draw states to learn from randomly
         for i, idx in enumerate(np.random.randint(0, len_memory,
                                                   size=inputs.shape[0])):
 
-            # print(i)
-            # print(idx)
-
             state_t, action_t, reward_t, state_tp1 = self.memory[idx][0]
-
-            # print(state_t)
-            # print(action_t)
-            # print(reward_t)
-            # print(state_tp1)
 
             # We also need to know whether the game ended at this state
             game_over = self.memory[idx][1]
@@ -63,30 +48,17 @@ class ExperienceReplay(object):
             # add the state s to the input
             inputs[i:i + 1] = state_t
 
-            # print(inputs)
-
             # First we fill the target values with the predictions of the model.
             # They will not be affected by training (since the training loss for them is 0)
             targets[i] = model.predict(state_t)[0]
 
-            # print(targets)
-
             #  Here Q_sa is max_a'Q(s', a')
             Q_sa = np.max(model.predict(state_tp1)[0])
-
-            # print(model.predict(state_tp1)[0])
-            # print(Q_sa)
 
             # if the game ended, the reward is the final reward
             if game_over:  # if game_over is True
                 targets[i, action_t] = reward_t
             else:
                 targets[i, action_t] = reward_t + self.discount * Q_sa
-
-            # print(reward_t)
-            # print(action_t)
-            # print(targets)
-            #
-            # print('-----------------')
 
         return inputs, targets

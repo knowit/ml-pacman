@@ -9,7 +9,7 @@ class QConfig(object):
 class DeepQConfig(object):
     def __init__(self):
         self.num_actions = 4
-        self.input_size = 60
+        self.input_size = 60 # TODO: Change this. Based on how big your map is, and how you represent your game state you will know the size of this.
         self.hidden_size = 512
         self.batch_size = 75
         self.episodes = 15
