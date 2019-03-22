@@ -3,8 +3,8 @@ import numpy as np
 from copy import deepcopy
 import pygame
 from qlearning.exp_rep import ExperienceReplay
-from qlearning.deepq_config import DeepQConfig
-from qlearning.dq_utils import calculate_reward_for_move, convert_action_to_int, plot_training_history
+from qlearning.q_config import DeepQConfig
+from qlearning.q_utils import calculate_reward_for_move, convert_action_to_int
 
 
 from pacman.actions import Action

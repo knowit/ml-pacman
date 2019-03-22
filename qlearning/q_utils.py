@@ -54,3 +54,25 @@ def plot_training_history(training_history):
     plt.xlabel('Epoch')
     plt.legend()
     plt.show()
+
+# TODO: Intro RL
+# TODO: Intro Q-learn
+# TODO: Intro Deep-Q-learn
+
+# TODO: ------------Q-learn------------
+# TODO: What number of episodes?
+# TODO: Rewards?
+# TODO: Exploration vs Exploitation ratio
+# TODO: Discount factor?
+# TODO: Learning rate (alpha)?
+# TODO: q_table
+# TODO: q_learning update rule
+# TODO: Ghost strats
+# TODO: ------------Q-learn------------
+
+# TODO: ------------Deep-Q-learn------------
+# TODO: Represent state
+# TODO: NN-architecture
+# TODO: Experience Replay
+# TODO: ------------Deep-Q-learn------------
+

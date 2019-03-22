@@ -6,3 +6,9 @@ class DeepQConfig(object):
         self.hidden_size = 512
         self.batch_size = 75
         self.episodes = 15
+
+
+class QConfig(object):
+    def __init__(self):
+        self.discount = 0.8
+        self.alpha = 0.2
