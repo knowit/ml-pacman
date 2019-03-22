@@ -26,6 +26,11 @@ class DeepQ(object):
     def init_model(self):
 
         # TODO: Make your own neural network with keras!
+        # TODO: Make it a sequential model with one hidden layer.
+        # TODO: The input layer size depends on how big your board is and how you represent a state (Explained in
+        # TODO: convert_state_to_input method underneath)
+        # TODO: output size is 4 (we can do 4 actions in pacman, up, right, down, left)
+        # TODO: Look at keras documentation how to (or look at the code solution)
         pass
 
     def convert_state_to_input(self, state):
