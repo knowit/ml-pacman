@@ -3,6 +3,7 @@ class QConfig(object):
     def __init__(self):
         self.discount = 0.8
         self.alpha = 0.2
+        self.episodes = 1
 
 
 class DeepQConfig(object):

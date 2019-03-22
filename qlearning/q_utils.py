@@ -1,23 +1,22 @@
 from pacman.actions import Action
 from pacman.gamelogic import ActionEvent
-import matplotlib
-matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 
+# TODO: Implement rewards for each action. I wonder what the best values are...
 def calculate_reward_for_move(action_event):
     if action_event == ActionEvent.DOT:
-        return 1
+        return 0
     elif action_event == ActionEvent.CAPTURED_BY_GHOST:
-        return -5
+        return 0
     elif action_event == ActionEvent.NONE:
-        return -0.1
+        return 0
     elif action_event == ActionEvent.WALL:
-        return -0.1
+        return 0
     elif action_event == ActionEvent.WON:
-        return 10
+        return 0
     elif action_event == ActionEvent.LOST:
-        return -10
+        return 0
     return 0
 
 
@@ -54,25 +53,4 @@ def plot_training_history(training_history):
     plt.xlabel('Epoch')
     plt.legend()
     plt.show()
-
-# TODO: Intro RL
-# TODO: Intro Q-learn
-# TODO: Intro Deep-Q-learn
-
-# TODO: ------------Q-learn------------
-# TODO: What number of episodes?
-# TODO: Rewards?
-# TODO: Exploration vs Exploitation ratio
-# TODO: Discount factor?
-# TODO: Learning rate (alpha)?
-# TODO: q_table
-# TODO: q_learning update rule
-# TODO: Ghost strats
-# TODO: ------------Q-learn------------
-
-# TODO: ------------Deep-Q-learn------------
-# TODO: Represent state
-# TODO: NN-architecture
-# TODO: Experience Replay
-# TODO: ------------Deep-Q-learn------------
 
