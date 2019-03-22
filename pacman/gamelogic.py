@@ -120,33 +120,6 @@ def get_next_game_state_from_action(current_game_state, action):
     Returns:
 
     """
-    # next_game_state = copy.deepcopy(current_game_state)
-    # next_game_state.pacman.set_move(action)
-    #
-    # is_move_valid = next_game_state.pacman.tick(next_game_state)
-    # if not is_move_valid:
-    #     next_game_state.last_game_event = ActionEvent.WALL
-    # else:
-    #     next_game_state.last_game_event = ActionEvent.NONE
-    #
-    # eaten_food = check_if_pacman_ate_food(current_game_state, next_game_state)
-    # if eaten_food is not None:
-    #     if next_game_state.num_dots_left == 0:
-    #         next_game_state = deepcopy(game.initial_game_state)
-    #         next_game_state.last_game_event = ActionEvent.WIN
-    #     else:
-    #         next_game_state.last_game_event = eaten_food
-    #
-    # for ghost in next_game_state.ghosts:
-    #     ghost.tick()
-    #
-    # if check_ghost_collisions(next_game_state):
-    #     next_game_state = deepcopy(game.initial_game_state)
-    #     next_game_state.last_game_event = ActionEvent.CAPTURED_BY_GHOST
-    #
-    # return next_game_state, next_game_state.last_game_event
-
-#     --------------------------------
     next_game_state = copy.deepcopy(current_game_state)
     next_game_state.pacman.set_move(action)
 

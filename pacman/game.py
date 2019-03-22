@@ -18,7 +18,7 @@ PACMAN_TICK = pygame.USEREVENT+2
 
 
 class Game:
-    def __init__(self, level, ai_function=None):
+    def __init__(self, level, init_screen=False, ai_function=None):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.initial_game_state = initialize_gamestate_from_file(level)
@@ -27,6 +27,8 @@ class Game:
         self.ai_function = ai_function
         pygame.time.set_timer(MOVE_GHOST_EVENT, 400)
         pygame.time.set_timer(PACMAN_TICK, 400)
+        if init_screen:
+            self.init_screen()
 
     def init_screen(self):
         self.screen = pygame.display.set_mode((800, 600))
@@ -71,9 +73,9 @@ class Game:
                 if not is_move_valid:
                     self.game_state.last_game_event = ActionEvent.WALL
 
-            if self.ai_function:
-                move = self.ai_function(self.game_state)
-                self.game_state.pacman.set_move(move)
+            # if self.ai_function:
+            #     move = self.ai_function(self.game_state)
+            #     self.game_state.pacman.set_move(move)
 
             self.handle_input_action(event)
 
@@ -89,3 +91,4 @@ class Game:
             self.game_state = deepcopy(self.initial_game_state)
         # Limit FPS to 60 (still unnecessarily high)
         self.clock.tick(60)
+

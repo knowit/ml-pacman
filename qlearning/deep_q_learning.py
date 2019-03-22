@@ -65,6 +65,7 @@ class DeepQ(object):
             return self.pick_optimal_action(game_state)
 
     def train(self):
+
         game = Game('level-0')
         tot_loss = {}
 
