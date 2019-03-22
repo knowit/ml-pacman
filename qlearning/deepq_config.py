@@ -5,4 +5,4 @@ class DeepQConfig(object):
         self.input_size = 60
         self.hidden_size = 512
         self.batch_size = 75
-        self.episodes = 150
+        self.episodes = 15

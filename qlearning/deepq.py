@@ -1,11 +1,10 @@
 import numpy as np
 
 from copy import deepcopy
-import time
 import pygame
 from qlearning.exp_rep import ExperienceReplay
 from qlearning.deepq_config import DeepQConfig
-from qlearning.dq_utils import calculate_reward_for_move, convert_action_to_int
+from qlearning.dq_utils import calculate_reward_for_move, convert_action_to_int, plot_training_history
 
 
 from pacman.actions import Action
@@ -67,15 +66,16 @@ class DeepQ(object):
 
     def train(self):
         game = Game('level-0')
-        now = time.time()
+        tot_loss = {}
 
         for i in range(1, self.config.episodes):
 
+            loss = 0.
+
+            iteration = 0
+
             done = False
             current_game_state = deepcopy(game.initial_game_state)
-
-            print(i)
-            print(time.time() - now)
 
             while not done:
 
@@ -100,84 +100,59 @@ class DeepQ(object):
                 inputs, targets = self.exp_replay.get_batch(model=self.model, batch_size=self.config.batch_size)
 
                 # train model on experiences
-                self.model.train_on_batch(inputs, targets)
+                batch_loss = self.model.train_on_batch(inputs, targets)
+
+                loss += batch_loss
+
+                iteration += 1
 
                 current_game_state = deepcopy(next_game_state)
+
+            print(i)
+            print(loss/iteration)
+
+            tot_loss[i] = (loss/iteration)
+
+        print(tot_loss)
+
+        # plot_training_history(tot_loss)
 
         self.model.save('./models/nn_model.h5')
 
     def run_model(self, model_path='./models/nn_model.h5'):
-        # TODO: Load model and run
+
         self.model = load_model(model_path)
-        pass
-
-    def run(self):
         game = Game('level-0')
-        now = time.time()
+        clock = pygame.time.Clock()
+        game.init_screen()
 
-        for i in range(1, 10):
+        for i in range(10):
 
-            done = False
             current_game_state = deepcopy(game.initial_game_state)
+            super_done = False
 
-            print(i)
-            print(time.time() - now)
+            while not super_done:
+                action = self.pick_optimal_action(current_game_state)
 
-            while not done:
+                game.animate()
 
-                action = self.pick_action(current_game_state)
                 next_game_state, action_event = get_next_game_state_from_action(current_game_state, action.value)
 
                 if action_event == ActionEvent.WON or action_event == ActionEvent.LOST:
-                    done = True
+                    super_done = True
                     if action_event == ActionEvent.WON:
                         print("Won!!")
                     else:
                         print('lost')
 
-                reward = calculate_reward_for_move(action_event)
-
-                states = [self.convert_state_to_input(current_game_state), convert_action_to_int(action), reward, self.convert_state_to_input(next_game_state)]
-
-                self.exp_replay.remember(states=states, game_over=done)
-
-                # Load batch of experiences
-                inputs, targets = self.exp_replay.get_batch(model=self.model, batch_size=self.config.batch_size)
-
-                # train model on experiences
-                self.model.train_on_batch(inputs, targets)
+                game.game_state = next_game_state
 
                 current_game_state = deepcopy(next_game_state)
+                pygame.display.flip()
 
-        current_game_state = deepcopy(game.initial_game_state)
-
-        super_done = False
-
-        clock = pygame.time.Clock()
-
-        game.init_screen()
-
-        while not super_done:
-
-            action = self.pick_optimal_action(current_game_state)
-
-            print(action)
-
-            game.animate()
-
-            next_game_state, action_event = get_next_game_state_from_action(current_game_state, action.value)
-
-            print(action_event)
-
-            game.game_state = next_game_state
-
-            # game.animate()
-
-            current_game_state = deepcopy(next_game_state)
-            pygame.display.flip()
-
-            clock.tick(2)
+                clock.tick(2)
 
 
 dq = DeepQ()
-dq.run()
+dq.train()
+dq.run_model()

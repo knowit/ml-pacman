@@ -31,14 +31,9 @@ class Game:
     def init_screen(self):
         self.screen = pygame.display.set_mode((800, 600))
 
-    def run(self, q_table=None, pick_optimal_action=None):
+    def run(self):
         while not self.done:
-            if q_table:
-                action = pick_optimal_action(self.game_state, q_table, True)
-                print(action)
-                self.execute_game_loop(ai_action=action.value)
-            else:
-                self.execute_game_loop()
+            self.execute_game_loop()
 
     def move_ghosts(self):
         for ghost in self.game_state.ghosts:

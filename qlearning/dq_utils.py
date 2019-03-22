@@ -1,5 +1,8 @@
 from pacman.actions import Action
 from pacman.gamelogic import ActionEvent
+import matplotlib
+matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
 
 
 def calculate_reward_for_move(action_event):
@@ -28,3 +31,26 @@ def convert_action_to_int(action):
     elif action == Action.LEFT:
         return 3
     return None
+
+
+def plot_training_history(training_history):
+    """
+
+    :param training_history:
+
+    :type training_history: dict
+    :return:
+    """
+    # print(training_history)
+
+    metrics = list(training_history.keys())
+    metric_history = list(training_history.values())
+    plt.figure(figsize=(40, 40))
+
+    for i in range(len(metrics)):
+        plt.plot(metric_history[i], label=metrics[i])
+
+    plt.ylabel('Metric value')
+    plt.xlabel('Epoch')
+    plt.legend()
+    plt.show()
