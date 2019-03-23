@@ -1,3 +1,9 @@
+import os
+import sys
+
+# Append path to use modules outside pycharm environment, e.g. terminal
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.pardir)))
+
 import numpy as np
 
 from copy import deepcopy
