@@ -26,11 +26,11 @@
 * Install anaconda with python 3.7 https://www.anaconda.com/distribution/
 * Run command in project folder: conda create -n ml-pacman python=3.6.5
 * Run command ```echo ". C:\\Users\\<username>\\Anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc```
-* Run command source ~/.bashrc
-* Run command pip install pygame
-* Run command conda install numpy
-* Run command conda install matplotlib
-* Run command conda install keras
+* Run command ```source ~/.bashrc```
+* Run command ```pip install pygame```
+* Run command ```conda install numpy```
+* Run command ```conda install matplotlib```
+* Run command ```conda install keras```
     
 ### MacOS
 
