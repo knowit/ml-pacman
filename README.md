@@ -21,8 +21,14 @@
 
 # Installation of dependencies
 
+The following steps are OS-dependent and after installing the dependecies you should be able to run the code in this project.
+
 ### Windows
+#### Git
 * Install git bash for windows and run it as administrator after installation https://git-scm.com/download/win. Execute every following command with this shell.
+* Clone this repository with ```git clone https://github.com/knowit/ml-pacman.git```
+
+#### Anaconda / Python
 * Install anaconda with python 3.7 https://www.anaconda.com/distribution/
 * Run command ```echo ". C:\\Users\\<username>\\Anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc``` and replace <username> with your username
 * Run command ```source ~/.bashrc```
@@ -34,6 +40,11 @@
 * Run command ```conda install keras```
     
 ### MacOS
+#### Git
+* Git should already be installed on OSX so no need to do anything else with git installation
+* Clone this repository with ```git clone https://github.com/knowit/ml-pacman.git```
+
+#### Anaconda / Python
 * Install anaconda with python 3.7 https://www.anaconda.com/distribution/
 * Run command ```export PATH="/Users/<username>/anaconda3/bin:$PATH"``` and replace <username> with your username
 * Run command ```echo ". /Users/<username>/anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc``` and replace <username> with your username
@@ -46,6 +57,11 @@
 * Run command ```conda install keras```
 
 ### Ubuntu/Linux
+#### Git
+* install git with ```sudo apt install git-all```
+* Clone this repository with ```git clone https://github.com/knowit/ml-pacman.git```
+
+#### Anaconda / Python
 * Download anaconda with python 3.7 https://www.anaconda.com/distribution/
 * Execute file from terminal and install into default location
 * Copy and paste into ~/.bashrc file and replace <username> with your username 
