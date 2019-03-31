@@ -39,6 +39,7 @@
 * Run command ```echo ". /Users/<username>/anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc```
 * Run command ```source ~/.bashrc```
 * Run command in project folder: ```conda create -n ml-pacman python=3.6.5```
+* Run command ```conda activate ml-pacman```
 * Run command ```pip install pygame```
 * Run command ```conda install numpy```
 * Run command ```conda install matplotlib```
@@ -50,6 +51,7 @@
 * Run command ```echo ". /Users/<username>/anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc```
 * Run command ```source ~/.bashrc```
 * Run command in project folder: ```conda create -n ml-pacman python=3.6.5```
+* Run command ```conda activate ml-pacman```
 * Run command ```pip install pygame```
 * Run command ```conda install numpy```
 * Run command ```conda install matplotlib```
