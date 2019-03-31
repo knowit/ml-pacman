@@ -22,7 +22,7 @@
 # Installation of dependencies
 
 ### Windows
-* If you don't have git install git bash for windows and run it as administrator after installation https://git-scm.com/download/win
+* Install git bash for windows and run it as administrator after installation https://git-scm.com/download/win. Execute every following command with this shell.
 * Install anaconda with python 3.7 https://www.anaconda.com/distribution/
 * Run command ```echo ". C:\\Users\\<username>\\Anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc``` and replace <username> with your username
 * Run command ```source ~/.bashrc```
@@ -46,7 +46,8 @@
 * Run command ```conda install keras```
 
 ### Ubuntu/Linux
-* Install anaconda with python 3.7 https://www.anaconda.com/distribution/
+* Download anaconda with python 3.7 https://www.anaconda.com/distribution/
+* Execute file from terminal and install into default location
 * Copy and paste into ~/.bashrc file and replace <username> with your username 
 ```
 __conda_setup="$(CONDA_REPORT_ERRORS=false '/home/<username>/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
