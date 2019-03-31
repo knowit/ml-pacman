@@ -110,6 +110,8 @@ def run_with_game_loop(level='level-0', model_path='./q_table.pkl'):
 
     q_model = QLearn()
     q_model.q_table = load_pickle(model_path)
+    print("Ha")
+    print(q_model.q_table)
 
     def ai_func(current_game_state):
         return q_model.pick_optimal_action(current_game_state)
@@ -118,7 +120,7 @@ def run_with_game_loop(level='level-0', model_path='./q_table.pkl'):
     game.run()
 
 
-q_learn = QLearn()
-q_learn.train()
+# q_learn = QLearn()
+# q_learn.train()
 
-run_with_game_loop()
+# run_with_game_loop()
