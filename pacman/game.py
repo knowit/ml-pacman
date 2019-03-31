@@ -1,3 +1,4 @@
+import sys
 from copy import deepcopy
 
 import pygame
@@ -73,16 +74,18 @@ class Game:
                 if not is_move_valid:
                     self.game_state.last_game_event = ActionEvent.WALL
 
-            # if self.ai_function:
-            #     move = self.ai_function(self.game_state)
-            #     self.game_state.pacman.set_move(move)
+            if self.ai_function:
+                action = self.ai_function(self.game_state)
+                self.game_state.pacman.set_move(action.value)
 
             self.handle_input_action(event)
 
-            # check_if_pacman_ate_food(previous_game_state, self.game_state)
-            # return self.game_state, self.game_state.last_game_event
-            if ai_action:
-                self.game_state.pacman.set_move(ai_action)
+        if self.game_state.has_won():
+            print("Congratulations you won!")
+            pygame.quit()
+            sys.exit()
+        elif self.game_state.has_lost():
+            print("Sorry. You lost.")
 
         if animate:
             self.animate()

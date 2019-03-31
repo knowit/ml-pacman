@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 
 from copy import deepcopy
@@ -8,9 +10,24 @@ import random
 from pacman.actions import Action
 from pacman.game import Game
 from pacman.gamelogic import ActionEvent, get_next_game_state_from_action
-from qlearning.q_utils import calculate_reward_for_move, convert_action_to_int
+from qlearning.q_utils import convert_action_to_int
 from qlearning.q_config import QConfig
+from utils.file_utils import save_pickle, load_pickle
 
+def calculate_reward_for_move(action_event):
+    if action_event == ActionEvent.DOT:
+        return 2
+    elif action_event == ActionEvent.CAPTURED_BY_GHOST:
+        return -5
+    elif action_event == ActionEvent.NONE:
+        return -0.1
+    elif action_event == ActionEvent.WALL:
+        return -0.1
+    elif action_event == ActionEvent.WON:
+        return 20
+    elif action_event == ActionEvent.LOST:
+        return -10
+    return 0
 
 class QLearn(object):
 
@@ -19,7 +36,7 @@ class QLearn(object):
         self.config = QConfig()
 
     def pick_action(self, game_state):
-        exploration_prob = 0.35
+        exploration_prob = 0.28
         if exploration_prob > np.random.rand():
             # Explore
             return np.random.choice(Action.get_all_actions())
@@ -59,24 +76,21 @@ class QLearn(object):
 
         return random.choice(actions)
 
-    def run(self):
-        game = Game('level-0')
+    def train(self, level='level-0', num_episodes=500):
+        game = Game(level)
 
-        now = time.time()
-
-        for i in range(1, 500):
-
-            done = False
+        for i in range(num_episodes):
             current_game_state = deepcopy(game.initial_game_state)
 
-            while not done:
-
+            episode_done = False
+            while not episode_done:
+                if i % 50 == 0:
+                    print("Iteration number", i)
                 action = self.pick_action(current_game_state)
-
-                _, action_event = get_next_game_state_from_action(current_game_state, action.value)
+                new_game_state, action_event = get_next_game_state_from_action(current_game_state, action.value)
 
                 if action_event == ActionEvent.WON or action_event == ActionEvent.LOST:
-                    done = True
+                    episode_done = True
                     if action_event == ActionEvent.WON:
                         print("Won!!")
 
@@ -85,46 +99,58 @@ class QLearn(object):
                 if current_game_state not in self.q_table:
                     self.q_table[current_game_state] = {key: 0.0 for key in Action.get_all_actions()}
 
-                self.q_table[current_game_state][action] = self.q_table[current_game_state][action] + self.config.alpha * (reward + (self.config.discount * self.compute_value_from_q_values(_)) - self.q_table[current_game_state][action])
+                self.q_table[current_game_state][action] = self.q_table[current_game_state][action] + self.config.alpha * (reward + (self.config.discount * self.compute_value_from_q_values(new_game_state)) - self.q_table[current_game_state][action])
 
-                current_game_state = _
+                current_game_state = new_game_state
 
-                # count += 1
-                if i % 10 == 0:
-                    print(i)
-                    print(time.time() - now)
-                    # now = time.time()
+        save_pickle('./q_table', self.q_table, True)
 
-        game.init_screen()
-
-        clock = pygame.time.Clock()
-
-        for i in range(5):
-
+    def run(self, level='level-0', model_path='./q_table.pkl', num_episodes=2):
+        self.q_table = load_pickle(model_path)
+        for i in range(num_episodes):
+            game = Game(level)
+            game.init_screen()
+            clock = pygame.time.Clock()
             current_game_state = deepcopy(game.initial_game_state)
-            super_done = False
 
-            while not super_done:
-
+            episode_done = False
+            while not episode_done:
+                pygame.event.get()
                 action = self.pick_optimal_action(current_game_state)
 
                 game.animate()
 
                 next_game_state, action_event = get_next_game_state_from_action(current_game_state, action.value)
-
-                if action_event == ActionEvent.WON or action_event == ActionEvent.LOST:
-                    super_done = True
-                    if action_event == ActionEvent.WON:
-                        print("Won!!")
-                    else:
-                        print('lost')
-
                 game.game_state = next_game_state
-
                 current_game_state = deepcopy(next_game_state)
 
-                clock.tick(1)
+                pygame.display.flip()
+                clock.tick(15)
+
+                if action_event == ActionEvent.WON or action_event == ActionEvent.LOST:
+                    episode_done = True
+                    if action_event == ActionEvent.WON:
+                        print("Congratulations you won!")
+                    else:
+                        print("Sorry. You lost.")
+        pygame.quit()
+        sys.exit()
+
+def run_with_game_loop(level='level-0', model_path='./q_table.pkl'):
+
+    q_learn = QLearn()
+    q_learn.q_table = load_pickle(model_path)
+
+    def ai_func(current_game_state):
+        return q_learn.pick_optimal_action(current_game_state)
+
+    game = Game(level, init_screen=True, ai_function=ai_func)
+    game.run()
 
 
 q_learn = QLearn()
+# q_learn.train()
+
 q_learn.run()
+
+# run_with_game_loop()
