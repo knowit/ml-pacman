@@ -35,15 +35,15 @@ def calculate_reward_for_move(action_event):
 class DeepQ(object):
 
     def __init__(self):
-        self.config = DeepQConfig()
+        self.input_size = 60  # TODO: Get dynamically from board
+        self.num_actions = len(Action.get_all_actions())
         self.model = self.init_model()
 
     def init_model(self):
-
         self.model = Sequential()
-        self.model.add(Dense(self.config.hidden_size, input_shape=(self.config.input_size,), activation='relu'))
-        self.model.add(Dense(self.config.hidden_size, activation='relu'))
-        self.model.add(Dense(self.config.num_actions))
+        self.model.add(Dense(512, input_shape=(self.input_size,), activation='relu'))
+        self.model.add(Dense(512, activation='relu'))
+        self.model.add(Dense(self.num_actions))
         self.model.compile(sgd(lr=.01), "mse")
 
         return self.model
@@ -64,7 +64,7 @@ class DeepQ(object):
             if char == '.':
                 r = np.concatenate([r, [1, 0, 0, 0, 0]])
 
-        return r.reshape(1, self.config.input_size)
+        return r.reshape(1, self.input_size)
 
     def pick_optimal_action(self, state):
         q = self.model.predict(self.convert_state_to_input(state))
@@ -94,7 +94,6 @@ class DeepQ(object):
             current_game_state = deepcopy(game.initial_game_state)
 
             while not done:
-
                 if num_episode_steps > 1000:
                     break
 
@@ -110,9 +109,6 @@ class DeepQ(object):
 
                 reward = calculate_reward_for_move(action_event)
 
-                # states = [self.convert_state_to_input(current_game_state), convert_action_to_int(action), reward,
-                #           self.convert_state_to_input(next_game_state)]
-
                 experience = Experience(
                     current_state=self.convert_state_to_input(current_game_state),
                     action=action,
@@ -121,12 +117,6 @@ class DeepQ(object):
                     done=done
                 )
                 memory.add(experience)
-
-                # self.exp_replay.remember(states=states, game_over=done)
-
-                # Load batch of experiences
-                # inputs, targets = self.exp_replay.get_batch(model=self.model, batch_size=self.config.batch_size)
-
 
                 batch = memory.get_mini_batch(batch_size=batch_size)
 
@@ -177,7 +167,7 @@ def run_with_game_loop(level='level-0', model_path='./nn_model.h5'):
     game.run()
 
 
-# dq = DeepQ()
-# dq.train(num_training_episodes=150, batch_size=75)
-#
-run_with_game_loop()
+dq = DeepQ()
+dq.train(num_training_episodes=150, batch_size=75)
+
+# run_with_game_loop()
