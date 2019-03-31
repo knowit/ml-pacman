@@ -63,7 +63,8 @@ The following steps are OS-dependent and after installing the dependecies you sh
 
 #### Anaconda / Python
 * Download anaconda with python 3.7 https://www.anaconda.com/distribution/
-* Execute file from terminal and install into default location
+* Make downloaded file an executable with ```chmod +x <anaconda file>``` when in same folder as downloaded file
+* Execute file with ```./<anaconda file>``` and install into default location
 * Copy and paste into ~/.bashrc file and replace <username> with your username 
 ```
 __conda_setup="$(CONDA_REPORT_ERRORS=false '/home/<username>/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
