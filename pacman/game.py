@@ -65,30 +65,34 @@ class Game:
         for event in pygame.event.get():
             self.game_state.last_game_event = ActionEvent.NONE
 
+            if event.type == PACMAN_TICK:
+                if self.ai_function:
+                    action = self.ai_function(self.game_state)
+                    self.game_state.pacman.set_move(action.value)
+                is_move_valid = self.game_state.pacman.tick(self.game_state)
+                if not is_move_valid:
+                    self.game_state.last_game_event = ActionEvent.WALL
             if event.type == pygame.QUIT:
                 self.done = True
             if event.type == MOVE_GHOST_EVENT:
                 self.move_ghosts()
-            if event.type == PACMAN_TICK:
-                is_move_valid = self.game_state.pacman.tick(self.game_state)
-                if not is_move_valid:
-                    self.game_state.last_game_event = ActionEvent.WALL
 
-            if self.ai_function:
-                action = self.ai_function(self.game_state)
-                self.game_state.pacman.set_move(action.value)
 
-            self.handle_input_action(event)
+            #self.handle_input_action(event)
+
+        if animate:
+            self.animate()
 
         if self.game_state.has_won():
             print("Congratulations you won!")
             pygame.quit()
             sys.exit()
+
         elif self.game_state.has_lost():
             print("Sorry. You lost.")
+            pygame.quit()
+            sys.exit()
 
-        if animate:
-            self.animate()
 
         if check_ghost_collisions(self.game_state):
             self.game_state = deepcopy(self.initial_game_state)

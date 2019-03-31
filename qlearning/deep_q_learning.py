@@ -6,7 +6,6 @@ from qlearning.exp_rep import ExperienceReplay
 from qlearning.q_config import DeepQConfig
 from qlearning.q_utils import convert_action_to_int
 
-
 from pacman.actions import Action
 from pacman.game import Game
 from pacman.gamelogic import ActionEvent, get_next_game_state_from_action
@@ -14,6 +13,7 @@ from keras import Sequential
 from keras.layers import Dense
 from keras.optimizers import sgd
 from keras.models import load_model
+
 
 def calculate_reward_for_move(action_event):
     if action_event == ActionEvent.DOT:
@@ -29,6 +29,7 @@ def calculate_reward_for_move(action_event):
     elif action_event == ActionEvent.LOST:
         return -10
     return 0
+
 
 class DeepQ(object):
 
@@ -124,17 +125,17 @@ class DeepQ(object):
                 current_game_state = deepcopy(next_game_state)
 
             print(i)
-            print(loss/iteration)
+            print(loss / iteration)
 
-            tot_loss[i] = (loss/iteration)
+            tot_loss[i] = (loss / iteration)
 
         print(tot_loss)
 
         # plot_training_history(tot_loss)
 
-        self.model.save('./models/nn_model.h5')
+        self.model.save('./nn_model.h5')
 
-    def run_model(self, model_path='./models/nn_model.h5'):
+    def run_model(self, model_path='./nn_model.h5'):
 
         self.model = load_model(model_path)
         game = Game('level-0')
@@ -168,6 +169,18 @@ class DeepQ(object):
                 clock.tick(2)
 
 
-dq = DeepQ()
-dq.train()
-dq.run_model()
+def run_with_game_loop(level='level-0', model_path='./nn_model.h5'):
+    dq_model = DeepQ()
+    dq_model.model = load_model(model_path)
+
+    def ai_func(current_game_state):
+        return dq_model.pick_optimal_action(current_game_state)
+
+    game = Game(level, init_screen=True, ai_function=ai_func)
+    game.run()
+
+
+# dq = DeepQ()
+# dq.train()
+
+run_with_game_loop()

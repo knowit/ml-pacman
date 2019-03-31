@@ -36,7 +36,7 @@ class QLearn(object):
         self.config = QConfig()
 
     def pick_action(self, game_state):
-        exploration_prob = 0.28
+        exploration_prob = 0.40
         if exploration_prob > np.random.rand():
             # Explore
             return np.random.choice(Action.get_all_actions())
@@ -76,7 +76,7 @@ class QLearn(object):
 
         return random.choice(actions)
 
-    def train(self, level='level-0', num_episodes=500):
+    def train(self, level='level-0', num_episodes=10):
         game = Game(level)
 
         for i in range(num_episodes):
@@ -138,19 +138,17 @@ class QLearn(object):
 
 def run_with_game_loop(level='level-0', model_path='./q_table.pkl'):
 
-    q_learn = QLearn()
-    q_learn.q_table = load_pickle(model_path)
+    q_model = QLearn()
+    q_model.q_table = load_pickle(model_path)
 
     def ai_func(current_game_state):
-        return q_learn.pick_optimal_action(current_game_state)
+        return q_model.pick_optimal_action(current_game_state)
 
     game = Game(level, init_screen=True, ai_function=ai_func)
     game.run()
 
 
 q_learn = QLearn()
-# q_learn.train()
+q_learn.train()
 
-q_learn.run()
-
-# run_with_game_loop()
+run_with_game_loop()
