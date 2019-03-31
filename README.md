@@ -24,7 +24,7 @@
 ### Windows
 * If you don't have git install git bash for windows and run it as administrator after installation https://git-scm.com/download/win
 * Install anaconda with python 3.7 https://www.anaconda.com/distribution/
-* Run command ```echo ". C:\\Users\\<username>\\Anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc```
+* Run command ```echo ". C:\\Users\\<username>\\Anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc``` and replace <username> with your username
 * Run command ```source ~/.bashrc```
 * Run command in project folder: ```conda create -n ml-pacman python=3.6.5```
 * Run command ```conda activate ml-pacman```
@@ -35,8 +35,8 @@
     
 ### MacOS
 * Install anaconda with python 3.7 https://www.anaconda.com/distribution/
-* Run command ```export PATH="/Users/<username>/anaconda3/bin:$PATH"```
-* Run command ```echo ". /Users/<username>/anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc```
+* Run command ```export PATH="/Users/<username>/anaconda3/bin:$PATH"``` and replace <username> with your username
+* Run command ```echo ". /Users/<username>/anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc``` and replace <username> with your username
 * Run command ```source ~/.bashrc```
 * Run command in project folder: ```conda create -n ml-pacman python=3.6.5```
 * Run command ```conda activate ml-pacman```
@@ -47,8 +47,21 @@
 
 ### Ubuntu/Linux
 * Install anaconda with python 3.7 https://www.anaconda.com/distribution/
-* Run command ```export PATH="/Users/<username>/anaconda3/bin:$PATH"```
-* Run command ```echo ". /Users/<username>/anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc```
+* Copy and paste into ~/.bashrc file and replace <username> with your username 
+```
+__conda_setup="$(CONDA_REPORT_ERRORS=false '/home/<username>/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    \eval "$__conda_setup"
+else
+    if [ -f "/home/<username>/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/<username>/anaconda3/etc/profile.d/conda.sh"
+        CONDA_CHANGEPS1=false conda activate base
+    else
+        \export PATH="/home/<username>/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+```
 * Run command ```source ~/.bashrc```
 * Run command in project folder: ```conda create -n ml-pacman python=3.6.5```
 * Run command ```conda activate ml-pacman```
