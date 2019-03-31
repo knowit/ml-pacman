@@ -11,7 +11,6 @@ from pacman.actions import Action
 from pacman.game import Game
 from pacman.gamelogic import ActionEvent, get_next_game_state_from_action
 from qlearning.q_utils import convert_action_to_int
-from qlearning.q_config import QConfig
 from utils.file_utils import save_pickle, load_pickle
 
 def calculate_reward_for_move(action_event):
@@ -33,7 +32,6 @@ class QLearn(object):
 
     def __init__(self):
         self.q_table = {}
-        self.config = QConfig()
 
     def pick_action(self, game_state):
         exploration_prob = 0.40
@@ -78,6 +76,8 @@ class QLearn(object):
 
     def train(self, level='level-0', num_episodes=10):
         game = Game(level)
+        discount = 0.8
+        alpha = 0.2
 
         for i in range(num_episodes):
             current_game_state = deepcopy(game.initial_game_state)
@@ -87,7 +87,7 @@ class QLearn(object):
                 if i % 50 == 0:
                     print("Iteration number", i)
                 action = self.pick_action(current_game_state)
-                new_game_state, action_event = get_next_game_state_from_action(current_game_state, action.value)
+                new_game_state, action_event = get_next_game_state_from_action(current_game_state, action.name)
 
                 if action_event == ActionEvent.WON or action_event == ActionEvent.LOST:
                     episode_done = True
@@ -99,42 +99,12 @@ class QLearn(object):
                 if current_game_state not in self.q_table:
                     self.q_table[current_game_state] = {key: 0.0 for key in Action.get_all_actions()}
 
-                self.q_table[current_game_state][action] = self.q_table[current_game_state][action] + self.config.alpha * (reward + (self.config.discount * self.compute_value_from_q_values(new_game_state)) - self.q_table[current_game_state][action])
+                self.q_table[current_game_state][action] = self.q_table[current_game_state][action] + alpha * (reward + (discount * self.compute_value_from_q_values(new_game_state)) - self.q_table[current_game_state][action])
 
                 current_game_state = new_game_state
 
         save_pickle('./q_table', self.q_table, True)
 
-    def run(self, level='level-0', model_path='./q_table.pkl', num_episodes=2):
-        self.q_table = load_pickle(model_path)
-        for i in range(num_episodes):
-            game = Game(level)
-            game.init_screen()
-            clock = pygame.time.Clock()
-            current_game_state = deepcopy(game.initial_game_state)
-
-            episode_done = False
-            while not episode_done:
-                pygame.event.get()
-                action = self.pick_optimal_action(current_game_state)
-
-                game.animate()
-
-                next_game_state, action_event = get_next_game_state_from_action(current_game_state, action.value)
-                game.game_state = next_game_state
-                current_game_state = deepcopy(next_game_state)
-
-                pygame.display.flip()
-                clock.tick(15)
-
-                if action_event == ActionEvent.WON or action_event == ActionEvent.LOST:
-                    episode_done = True
-                    if action_event == ActionEvent.WON:
-                        print("Congratulations you won!")
-                    else:
-                        print("Sorry. You lost.")
-        pygame.quit()
-        sys.exit()
 
 def run_with_game_loop(level='level-0', model_path='./q_table.pkl'):
 

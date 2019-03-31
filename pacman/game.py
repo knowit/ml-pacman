@@ -15,9 +15,6 @@ import time
 MOVE_GHOST_EVENT = pygame.USEREVENT+1
 PACMAN_TICK = pygame.USEREVENT+2
 
-# TODO: Embed AI in game or game in AI?
-
-
 class Game:
     def __init__(self, level, init_screen=False, ai_function=None):
         pygame.init()
@@ -60,7 +57,11 @@ class Game:
         move = map_key_to_move(event)
         self.game_state.pacman.set_move(move)
 
-    def execute_game_loop(self, ai_action=None, animate=True):
+    def reset_if_ghost_collision(self):
+        if check_ghost_collisions(self.game_state):
+            self.game_state = deepcopy(self.initial_game_state)
+
+    def execute_game_loop(self, animate=True):
         # Handle keyboard events for manual playing
         for event in pygame.event.get():
             self.game_state.last_game_event = ActionEvent.NONE
@@ -68,14 +69,17 @@ class Game:
             if event.type == PACMAN_TICK:
                 if self.ai_function:
                     action = self.ai_function(self.game_state)
-                    self.game_state.pacman.set_move(action.value)
+                    self.game_state.pacman.set_move(action.name)
                 is_move_valid = self.game_state.pacman.tick(self.game_state)
                 if not is_move_valid:
                     self.game_state.last_game_event = ActionEvent.WALL
+
+                self.reset_if_ghost_collision()
             if event.type == pygame.QUIT:
                 self.done = True
             if event.type == MOVE_GHOST_EVENT:
                 self.move_ghosts()
+                self.reset_if_ghost_collision()
 
 
             #self.handle_input_action(event)
@@ -87,15 +91,11 @@ class Game:
             print("Congratulations you won!")
             pygame.quit()
             sys.exit()
-
         elif self.game_state.has_lost():
             print("Sorry. You lost.")
             pygame.quit()
             sys.exit()
 
-
-        if check_ghost_collisions(self.game_state):
-            self.game_state = deepcopy(self.initial_game_state)
         # Limit FPS to 60 (still unnecessarily high)
         self.clock.tick(60)
 

@@ -2,7 +2,8 @@ import numpy as np
 
 from copy import deepcopy
 import pygame
-from qlearning.exp_rep import ExperienceReplay
+
+from qlearning.ExperienceReplay import Memory, Experience
 from qlearning.q_config import DeepQConfig
 from qlearning.q_utils import convert_action_to_int
 
@@ -36,7 +37,6 @@ class DeepQ(object):
     def __init__(self):
         self.config = DeepQConfig()
         self.model = self.init_model()
-        self.exp_replay = ExperienceReplay()
 
     def init_model(self):
 
@@ -79,24 +79,27 @@ class DeepQ(object):
             # Exploit
             return self.pick_optimal_action(game_state)
 
-    def train(self):
+    def train(self, num_training_episodes, batch_size, gamma=0.9):
 
         game = Game('level-0')
         tot_loss = {}
+        memory = Memory(max_size=5000)
 
-        for i in range(1, self.config.episodes):
+        for i in range(1, num_training_episodes):
 
             loss = 0.
-
-            iteration = 0
+            num_episode_steps = 0
 
             done = False
             current_game_state = deepcopy(game.initial_game_state)
 
             while not done:
 
+                if num_episode_steps > 1000:
+                    break
+
                 action = self.pick_action(current_game_state)
-                next_game_state, action_event = get_next_game_state_from_action(current_game_state, action.value)
+                next_game_state, action_event = get_next_game_state_from_action(current_game_state, action.name)
 
                 if action_event == ActionEvent.WON or action_event == ActionEvent.LOST:
                     done = True
@@ -107,66 +110,60 @@ class DeepQ(object):
 
                 reward = calculate_reward_for_move(action_event)
 
-                states = [self.convert_state_to_input(current_game_state), convert_action_to_int(action), reward,
-                          self.convert_state_to_input(next_game_state)]
+                # states = [self.convert_state_to_input(current_game_state), convert_action_to_int(action), reward,
+                #           self.convert_state_to_input(next_game_state)]
 
-                self.exp_replay.remember(states=states, game_over=done)
+                experience = Experience(
+                    current_state=self.convert_state_to_input(current_game_state),
+                    action=action,
+                    reward=reward,
+                    next_state=self.convert_state_to_input(next_game_state),
+                    done=done
+                )
+                memory.add(experience)
+
+                # self.exp_replay.remember(states=states, game_over=done)
 
                 # Load batch of experiences
-                inputs, targets = self.exp_replay.get_batch(model=self.model, batch_size=self.config.batch_size)
+                # inputs, targets = self.exp_replay.get_batch(model=self.model, batch_size=self.config.batch_size)
 
-                # train model on experiences
-                batch_loss = self.model.train_on_batch(inputs, targets)
+
+                batch = memory.get_mini_batch(batch_size=batch_size)
+
+                # Dimensions of our observed states, ie, the input to our model.
+                input_dim = batch[0].current_state.shape[1]
+                x_train = np.zeros((min(memory.get_size(), batch_size), input_dim))
+                y_train = np.zeros((x_train.shape[0], len(Action.get_all_actions())))  # Target Q-value
+
+                sample: Experience
+                for j, sample in enumerate(batch):
+                    y_target = self.model.predict(sample.current_state)[0]
+
+                    x_train[j:j + 1] = sample.current_state
+                    if sample.done:
+                        y_target[sample.action.value] = sample.reward
+                    else:
+                        y_target[sample.action.value] = sample.reward + gamma * np.max(self.model.predict(sample.next_state))
+                    y_train[j] = y_target
+
+                batch_loss = self.model.train_on_batch(x_train, np.asarray(y_train))
 
                 loss += batch_loss
 
-                iteration += 1
+                num_episode_steps += 1
 
                 current_game_state = deepcopy(next_game_state)
 
             print(i)
-            print(loss / iteration)
+            print(loss / num_episode_steps)
 
-            tot_loss[i] = (loss / iteration)
+            tot_loss[i] = (loss / num_episode_steps)
 
         print(tot_loss)
 
         # plot_training_history(tot_loss)
 
         self.model.save('./nn_model.h5')
-
-    def run_model(self, model_path='./nn_model.h5'):
-
-        self.model = load_model(model_path)
-        game = Game('level-0')
-        clock = pygame.time.Clock()
-        game.init_screen()
-
-        for i in range(10):
-
-            current_game_state = deepcopy(game.initial_game_state)
-            super_done = False
-
-            while not super_done:
-                action = self.pick_optimal_action(current_game_state)
-
-                game.animate()
-
-                next_game_state, action_event = get_next_game_state_from_action(current_game_state, action.value)
-
-                if action_event == ActionEvent.WON or action_event == ActionEvent.LOST:
-                    super_done = True
-                    if action_event == ActionEvent.WON:
-                        print("Won!!")
-                    else:
-                        print('lost')
-
-                game.game_state = next_game_state
-
-                current_game_state = deepcopy(next_game_state)
-                pygame.display.flip()
-
-                clock.tick(2)
 
 
 def run_with_game_loop(level='level-0', model_path='./nn_model.h5'):
@@ -181,6 +178,6 @@ def run_with_game_loop(level='level-0', model_path='./nn_model.h5'):
 
 
 # dq = DeepQ()
-# dq.train()
-
+# dq.train(num_training_episodes=150, batch_size=75)
+#
 run_with_game_loop()
