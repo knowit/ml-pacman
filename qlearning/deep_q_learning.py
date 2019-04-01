@@ -160,7 +160,7 @@ class DeepQ(object):
 
 
 def run_with_game_loop(level='level-0', model_path='./nn_model.h5'):
-    dq_model = DeepQ()
+    dq_model = DeepQ(level)
     dq_model.model = load_model(model_path)
 
     def ai_func(current_game_state):
