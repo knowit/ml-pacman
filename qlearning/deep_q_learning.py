@@ -3,6 +3,7 @@ import numpy as np
 from copy import deepcopy
 import pygame
 
+from pacman.initializer import initialize_gamestate_from_file
 from qlearning.ExperienceReplay import Memory, Experience
 from qlearning.q_config import DeepQConfig
 from qlearning.q_utils import convert_action_to_int
@@ -79,9 +80,9 @@ class DeepQ(object):
             # Exploit
             return self.pick_optimal_action(game_state)
 
-    def train(self, num_training_episodes, batch_size, gamma=0.9):
+    def train(self, level, num_training_episodes, batch_size, gamma=0.9):
 
-        game = Game('level-0')
+        initial_game_state = initialize_gamestate_from_file(level)
         tot_loss = {}
         memory = Memory(max_size=5000)
 
@@ -91,7 +92,7 @@ class DeepQ(object):
             num_episode_steps = 0
 
             done = False
-            current_game_state = deepcopy(game.initial_game_state)
+            current_game_state = deepcopy(initial_game_state)
 
             while not done:
                 if num_episode_steps > 1000:
@@ -167,7 +168,7 @@ def run_with_game_loop(level='level-0', model_path='./nn_model.h5'):
     game.run()
 
 
-dq = DeepQ()
-dq.train(num_training_episodes=150, batch_size=75)
+# dq = DeepQ()
+# dq.train(level='level-0', num_training_episodes=150, batch_size=75)
 
 # run_with_game_loop()
