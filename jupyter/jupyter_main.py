@@ -1,3 +1,9 @@
+import os
+import sys
+
+# Append path to use modules outside pycharm environment, e.g. terminal
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.pardir)))
+
 from keras.engine.saving import load_model
 
 from pacman.game import Game
