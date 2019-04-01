@@ -18,7 +18,7 @@ def play_q_learning_model(level='level-0', model_path='./q_table.pkl'):
 
 
 def play_deep_q_model(level='level-0', model_path='./nn_model.h5'):
-    dq_model = DeepQ()
+    dq_model = DeepQ(level)
     dq_model.model = load_model(model_path)
 
     def ai_func(current_game_state):
@@ -28,4 +28,5 @@ def play_deep_q_model(level='level-0', model_path='./nn_model.h5'):
     game.run()
 
 
-play_q_learning_model()
+# play_q_learning_model()
+# play_deep_q_model()

@@ -35,8 +35,10 @@ def calculate_reward_for_move(action_event):
 
 class DeepQ(object):
 
-    def __init__(self):
-        self.input_size = 60  # TODO: Get dynamically from board
+    def __init__(self, level):
+        initial_game_state = initialize_gamestate_from_file(level)
+
+        self.input_size = self.convert_state_to_input(initial_game_state).size
         self.num_actions = len(Action.get_all_actions())
         self.model = self.init_model()
 
@@ -65,7 +67,7 @@ class DeepQ(object):
             if char == '.':
                 r = np.concatenate([r, [1, 0, 0, 0, 0]])
 
-        return r.reshape(1, self.input_size)
+        return r.reshape(1, r.size)
 
     def pick_optimal_action(self, state):
         q = self.model.predict(self.convert_state_to_input(state))

@@ -42,7 +42,7 @@ class QLearn(object):
             # Exploit
             return self.pick_optimal_action(game_state)
 
-    def compute_value_from_q_values(self, state):
+    def compute_max_q_value(self, state):
         """
           Returns max_action Q(state,action)
           where the max is over legal actions.  Note that if
@@ -100,7 +100,7 @@ class QLearn(object):
                 if current_game_state not in self.q_table:
                     self.q_table[current_game_state] = {key: 0.0 for key in Action.get_all_actions()}
 
-                self.q_table[current_game_state][action] = self.q_table[current_game_state][action] + alpha * (reward + (discount * self.compute_value_from_q_values(new_game_state)) - self.q_table[current_game_state][action])
+                self.q_table[current_game_state][action] = self.q_table[current_game_state][action] + alpha * (reward + (discount * self.compute_max_q_value(new_game_state)) - self.q_table[current_game_state][action])
 
                 current_game_state = new_game_state
 
