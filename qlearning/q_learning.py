@@ -71,6 +71,7 @@ class QLearn(object):
         if printing:
             print(state)
             print(self.q_table[state])
+            print(state.__hash__())
 
         return random.choice(actions)
 
@@ -118,7 +119,7 @@ def run_with_game_loop(level='level-0', model_path='./q_table.pkl'):
     game.run()
 
 
-q_learn = QLearn()
-q_learn.train(num_episodes=500)
-
-run_with_game_loop()
+# q_learn = QLearn()
+# q_learn.train(num_episodes=150)
+#
+# run_with_game_loop()
