@@ -1,7 +1,6 @@
 import numpy as np
 
 from copy import deepcopy
-import pygame
 
 from pacman.initializer import initialize_gamestate_from_file
 from qlearning.ExperienceReplay import Memory, Experience
@@ -30,6 +29,8 @@ def calculate_reward_for_move(action_event):
         return 10
     elif action_event == ActionEvent.LOST:
         return -10
+    elif action_event == ActionEvent.FRUIT:
+        return 5
     return 0
 
 
@@ -56,8 +57,8 @@ class DeepQ(object):
         r = np.array([])
 
         for char in string_rep:
-            # if char == '%':
-            #     r = np.concatenate([r, [0, 0, 0, 0, 1]])
+            if char == 'o':
+                r = np.concatenate([r, [0, 0, 0, 0, 1]])
             if char == ' ':
                 r = np.concatenate([r, [0, 0, 0, 1, 0]])
             if char == 'P':
@@ -73,8 +74,8 @@ class DeepQ(object):
         q = self.model.predict(self.convert_state_to_input(state))
         return Action.get_all_actions()[np.argmax(q[0])]
 
-    def pick_action(self, game_state):
-        exploration_prob = 0.20
+    def pick_action(self, game_state, i):
+        exploration_prob = 4 / ((i + 1) ** (1 / 2.2))
         if exploration_prob > np.random.rand():
             # Explore
             return np.random.choice(Action.get_all_actions())
@@ -100,7 +101,7 @@ class DeepQ(object):
                 if num_episode_steps > 1000:
                     break
 
-                action = self.pick_action(current_game_state)
+                action = self.pick_action(current_game_state, i)
                 next_game_state, action_event = get_next_game_state_from_action(current_game_state, action.name)
 
                 if action_event == ActionEvent.WON or action_event == ActionEvent.LOST:
@@ -152,6 +153,9 @@ class DeepQ(object):
 
             tot_loss[i] = (loss / num_episode_steps)
 
+            if i % 500 == 0:
+                self.model.save('./nn_model' + str(i) + '.h5')
+
         print(tot_loss)
 
         # plot_training_history(tot_loss)
@@ -159,7 +163,7 @@ class DeepQ(object):
         self.model.save('./nn_model.h5')
 
 
-def run_with_game_loop(level='level-0', model_path='./nn_model.h5'):
+def run_with_game_loop(level='level-2', model_path='./nn_model4500.h5'):
     dq_model = DeepQ(level)
     dq_model.model = load_model(model_path)
 
@@ -170,7 +174,7 @@ def run_with_game_loop(level='level-0', model_path='./nn_model.h5'):
     game.run()
 
 
-# dq = DeepQ()
-# dq.train(level='level-0', num_training_episodes=150, batch_size=75)
+# dq = DeepQ(level='level-2')
+# dq.train(level='level-2', num_training_episodes=5000, batch_size=75)
 
-# run_with_game_loop()
+run_with_game_loop()

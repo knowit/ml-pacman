@@ -23,7 +23,7 @@ def play_q_learning_model(level='level-0', model_path='./q_table.pkl'):
     game.run()
 
 
-def play_deep_q_model(level='level-0', model_path='./nn_model.h5'):
+def play_deep_q_model(level='level-0', model_path='./nn_model_level_0_2k_iter.h5'):
     dq_model = DeepQ(level)
     dq_model.model = load_model(model_path)
 
