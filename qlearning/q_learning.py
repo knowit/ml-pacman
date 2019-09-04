@@ -10,8 +10,8 @@ import random
 from pacman.actions import Action
 from pacman.game import Game
 from pacman.gamelogic import ActionEvent, get_next_game_state_from_action
-from qlearning.q_utils import convert_action_to_int
 from utils.file_utils import save_pickle, load_pickle
+
 
 def calculate_reward_for_move(action_event):
     if action_event == ActionEvent.DOT:
@@ -28,13 +28,14 @@ def calculate_reward_for_move(action_event):
         return -10
     return 0
 
+
 class QLearn(object):
 
     def __init__(self):
         self.q_table = {}
 
     def pick_action(self, game_state):
-        exploration_prob = 0.40
+        exploration_prob = 0.20
         if exploration_prob > np.random.rand():
             # Explore
             return np.random.choice(Action.get_all_actions())
@@ -119,7 +120,8 @@ def run_with_game_loop(level='level-0', model_path='./q_table.pkl'):
     game.run()
 
 
-# q_learn = QLearn()
-# q_learn.train(num_episodes=150)
-#
-# run_with_game_loop()
+if __name__ == '__main__':
+    # q_learn = QLearn()
+    # q_learn.train(num_episodes=400)
+    
+    run_with_game_loop()

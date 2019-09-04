@@ -4,8 +4,6 @@ from copy import deepcopy
 
 from pacman.initializer import initialize_gamestate_from_file
 from qlearning.ExperienceReplay import Memory, Experience
-from qlearning.q_config import DeepQConfig
-from qlearning.q_utils import convert_action_to_int
 
 from pacman.actions import Action
 from pacman.game import Game
@@ -174,7 +172,8 @@ def run_with_game_loop(level='level-2', model_path='./nn_model4500.h5'):
     game.run()
 
 
-# dq = DeepQ(level='level-2')
-# dq.train(level='level-2', num_training_episodes=5000, batch_size=75)
+if __name__ == '__main__':
+    # dq = DeepQ(level='level-2')
+    # dq.train(level='level-2', num_training_episodes=5000, batch_size=75)
 
-run_with_game_loop()
+    run_with_game_loop()
