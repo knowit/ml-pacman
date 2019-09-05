@@ -35,7 +35,7 @@ def play_deep_q_model(level='level-0', model_path='./nn_model_level_0_2k_iter.h5
 
 
 def test_setup():
-    game = Game('level-2', True)
+    game = Game('level-0', True)
     game.run()
 
 # play_q_learning_model()
