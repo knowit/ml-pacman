@@ -1,10 +1,6 @@
-import sys
-
 import numpy as np
 
 from copy import deepcopy
-import time
-import pygame
 import random
 
 from pacman.actions import Action
