@@ -17,7 +17,7 @@ def play_q_learning_model(level='level-0', model_path='./q_table.pkl'):
     q_model.q_table = load_pickle(model_path)
 
     def ai_func(current_game_state):
-        return q_model.pick_optimal_action(current_game_state, printing=True)
+        return q_model.pick_optimal_action(current_game_state, printing=False)
 
     game = Game(level, init_screen=True, ai_function=ai_func)
     game.run()
