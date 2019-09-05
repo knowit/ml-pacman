@@ -31,7 +31,7 @@ We recommend and use PyCharm by JetBrains: https://www.jetbrains.com/pycharm/
 
 The following steps are OS-dependent and after installing the dependecies you should be able to run the code in this project.
 
-### Windows
+### Windows 10
 
 #### Install Git
 * Install git bash for windows and run it as administrator after installation https://git-scm.com/download/win. Execute every following command with this shell.
