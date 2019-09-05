@@ -34,5 +34,11 @@ def play_deep_q_model(level='level-0', model_path='./nn_model_level_0_2k_iter.h5
     game.run()
 
 
+def test_setup():
+    game = Game('level-2', True)
+    game.run()
+
 # play_q_learning_model()
-play_deep_q_model()
+# play_deep_q_model()
+
+test_setup()  # TODO: Remove before running Q-learning or Deep-Q
