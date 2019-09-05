@@ -33,30 +33,44 @@ The following steps are OS-dependent and after installing the dependecies you sh
 
 ### Windows
 
-#### Git
+#### Install Git
 * Install git bash for windows and run it as administrator after installation https://git-scm.com/download/win. Execute every following command with this shell.
 * Clone this repository with ```git clone https://github.com/knowit/ml-pacman.git```
 
-#### Anaconda / Python
-* Install anaconda with python 3.7 https://www.anaconda.com/distribution/
-* Run command ```echo ". C:\\Users\\<username>\\Anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc``` and replace <username> with your username
-* Run command ```source ~/.bashrc```
-* Run command in project folder: ```conda create -n ml-pacman python=3.6.5```
-* Run command ```conda activate ml-pacman```
-* Run command ```pip install pygame```
-* Run command ```conda install numpy```
-* Run command ```conda install matplotlib```
-* Run command ```conda install keras```
+
+#### Install python
+
+* Install python 3.7 from https://www.python.org/downloads/windows/. Follow the install guide, but make sure that the `install pip` checkbox is checked, and that `add python to path` is checked. That makes it a lot easier. You should now be able to write `python` in the command prompt to start python.
+* You can either install Python packages globally or in a virtual environment.
+It is advisable to create a separate virtual environment for all your Python projects,
+so that they do not interfere with each other.
+Run these commands in Terminal.
+    - Install virtualenv: Run `pip3 install virtualenv`
+    - Create a virtualenv for the project: Run `virtualenv PATH_TO_ENVIRONMENT_DIRECTORY/[INSERT_ENV_NAME]`,
+    e.g `virtualenv ml-pacman` will create the environment in the current directory.
+    - **Note:** There is an extension to `virtualenv` called `virtualenvwrapper`,
+    which has extended functionality. You can check it out if you want to, but it is not critical:
+    https://virtualenvwrapper.readthedocs.io/en/latest/
+* Activate the new virtual environment. Run: `source PATH_TO_ENVIRONMENT_DIRECTORY/[ENV_NAME]/bin/activate`,
+e.g. `source PATH_TO_ENVIRONMENT_DIRECTORY/ml-pacman/bin/activate`
+* Your command line should now display something like: `(ml-pacman)`,
+which means you're inside the virtual environment. Now you can install the required packages. Run:
+`pip install -r requirements.txt`
 * Head into the jupyter package and run jupyter_main.py.
  A graphical interface with our version of Pac-Man should show on the screen if the setup is right.
+
+
+#### Anaconda
+
+If you want to use anaconda you are welcome to do so, but we don't have much knowledge about it, and therefore can't help you much if you can't figure it out yourself.
 
 ### MacOS
 
 #### Git
 * Install git: https://git-scm.com/download/mac
+* Clone this repository: ```git clone https://github.com/knowit/ml-pacman.git```
 
 #### Python
-* Clone this repository: ```git clone https://github.com/knowit/ml-pacman.git```
 * Download Python 3.7: https://www.python.org/downloads/
 * You can either install Python packages globally or in a virtual environment.
 It is advisable to create a separate virtual environment for all your Python projects,
