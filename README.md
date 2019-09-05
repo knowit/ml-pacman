@@ -27,18 +27,18 @@ If it does not work, do not worry. We will help you on the day of the workshop.
 # Project setup
 
 #### IDE
-We recommend and use PyCharm by JetBrains: https://www.jetbrains.com/pycharm/
+We recommend using PyCharm by JetBrains: https://www.jetbrains.com/pycharm/
 
 The following steps are OS-dependent and after installing the dependecies you should be able to run the code in this project.
 
 ### Windows 10
 
-#### Install Git
+#### Git
 * Install git bash for windows and run it as administrator after installation https://git-scm.com/download/win. Execute every following command with this shell.
 * Clone this repository with ```git clone https://github.com/knowit/ml-pacman.git```
 
 
-#### Install python
+#### Python
 
 * Install python 3.7 from https://www.python.org/downloads/windows/. Follow the install guide, but make sure that the `install pip` checkbox is checked, and that `add python to path` is checked. That makes it a lot easier. You should now be able to write `python` in the command prompt to start python.
 * You can either install Python packages globally or in a virtual environment.
