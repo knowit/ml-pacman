@@ -45,16 +45,20 @@ The following steps are OS-dependent and after installing the dependecies you sh
 It is advisable to create a separate virtual environment for all your Python projects,
 so that they do not interfere with each other.
 Run these commands in Terminal.
-    - Install virtualenv: Run `pip3 install virtualenv`
+    - Install virtualenv: Run `pip install virtualenv`
     - Create a virtualenv for the project: Run `virtualenv PATH_TO_ENVIRONMENT_DIRECTORY/[INSERT_ENV_NAME]`,
     e.g `virtualenv ml-pacman` will create the environment in the current directory.
     - **Note:** There is an extension to `virtualenv` called `virtualenvwrapper`,
     which has extended functionality. You can check it out if you want to, but it is not critical:
     https://virtualenvwrapper.readthedocs.io/en/latest/
-* Activate the new virtual environment. Run: `source PATH_TO_ENVIRONMENT_DIRECTORY/[ENV_NAME]/bin/activate`,
-e.g. `source PATH_TO_ENVIRONMENT_DIRECTORY/ml-pacman/bin/activate`
-* Your command line should now display something like: `(ml-pacman)`,
-which means you're inside the virtual environment. Now you can install the required packages. Run:
+    - Activate the new virtual environment. On Windows, virtualenv creates a batch file
+    `\env\Scripts\activate.bat` to activate virtualenv on Windows, activate script is in the Scripts folder :
+    `\path\to\env\Scripts\activate`
+    Example:
+    `C:\Users\'Username'\venv\Scripts\activate.bat`
+    - Your command line should now display something like: `(ml-pacman)`,
+    which means you're inside the virtual environment.
+* Now you can install the required packages. Run:
 `pip install -r requirements.txt`
 * Head into the jupyter package and run jupyter_main.py.
  A graphical interface with our version of Pac-Man should show on the screen if the setup is right.
