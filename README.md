@@ -24,6 +24,8 @@ If you have any problems during the setup, please contact us at manu.gopinathan@
 and malte.loller-andersen@knowit.no, and we will try to assist you the best we can.
 If it does not work, do not worry. We will help you on the day of the workshop.
 
+[Presentation slides](https://drive.google.com/file/d/11g8kM7mosJ_tyy1uRzRVIY4wpFyR2R3D/view)
+
 # Project setup
 
 #### IDE
