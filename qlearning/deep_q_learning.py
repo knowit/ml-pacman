@@ -4,8 +4,6 @@ from copy import deepcopy
 
 from pacman.initializer import initialize_gamestate_from_file
 from qlearning.ExperienceReplay import Memory, Experience
-from qlearning.q_config import DeepQConfig
-from qlearning.q_utils import convert_action_to_int
 
 from pacman.actions import Action
 from pacman.game import Game
@@ -153,17 +151,17 @@ class DeepQ(object):
 
             tot_loss[i] = (loss / num_episode_steps)
 
-            if i % 500 == 0:
-                self.model.save('./nn_model' + str(i) + '.h5')
+            if i % 100 == 0:
+                self.model.save('./nn_model_' + str(level) + '_' + str(i) + '.h5')
 
         print(tot_loss)
 
         # plot_training_history(tot_loss)
 
-        self.model.save('./nn_model.h5')
+        self.model.save('./nn_model-' + str(level) + '-final.h5')
 
 
-def run_with_game_loop(level='level-2', model_path='./nn_model4500.h5'):
+def run_with_game_loop(level='level-2', model_path=''):
     dq_model = DeepQ(level)
     dq_model.model = load_model(model_path)
 
@@ -174,7 +172,9 @@ def run_with_game_loop(level='level-2', model_path='./nn_model4500.h5'):
     game.run()
 
 
-dq = DeepQ(level='level-3')
-dq.train(level='level-3', num_training_episodes=5000, batch_size=75)
+if __name__ == '__main__':
+    dq = DeepQ(level='level-3')
+    dq.train(level='level-3', num_training_episodes=5000, batch_size=75)
 
-# run_with_game_loop()
+    # run_with_game_loop()
+
