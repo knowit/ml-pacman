@@ -85,7 +85,7 @@ class DeepQ(object):
 
         initial_game_state = initialize_gamestate_from_file(level)
         tot_loss = {}
-        memory = Memory(max_size=7000)
+        memory = Memory(max_size=6000)
 
         for i in range(1, num_training_episodes):
 
@@ -161,7 +161,7 @@ class DeepQ(object):
         self.model.save('./nn_model-' + str(level) + '-final.h5')
 
 
-def run_with_game_loop(level='level-2', model_path=''):
+def run_with_game_loop(level='level-', model_path=''):
     dq_model = DeepQ(level)
     dq_model.model = load_model(model_path)
 
@@ -173,8 +173,8 @@ def run_with_game_loop(level='level-2', model_path=''):
 
 
 if __name__ == '__main__':
-    dq = DeepQ(level='level-3')
-    dq.train(level='level-3', num_training_episodes=5000, batch_size=75)
+    dq = DeepQ(level='level-4')
+    dq.train(level='level-4', num_training_episodes=7000, batch_size=75)
 
     # run_with_game_loop()
 
